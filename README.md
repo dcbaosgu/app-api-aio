@@ -9,13 +9,27 @@
 </p>
 
 <p align="center">
-  ![FastAPI](https://img.shields.io/badge/FastAPI-0.100.0-blue?color=00B16A)
-  ![Docker](https://img.shields.io/badge/Docker-Latest-blue?color=00B16A)
-  ![MongoDB](https://img.shields.io/badge/MongoDB-Latest-blue?color=00B16A)
-  ![RabbitMQ](https://img.shields.io/badge/RabbitMQ-Latest-blue?color=00B16A)
-  ![Kafka](https://img.shields.io/badge/Kafka-Latest-blue?color=00B16A)
-  ![Redis](https://img.shields.io/badge/Redis-Latest-blue?color=00B16A)
-  ![Sentry](https://img.shields.io/badge/Sentry-Latest-blue?color=00B16A)
+  <a href="https://fastapi.tiangolo.com/">
+    <img src="https://img.shields.io/badge/FastAPI-0.100.0-blue?color=00B16A" alt="FastAPI">
+  </a>
+  <a href="https://www.docker.com/">
+    <img src="https://img.shields.io/badge/Docker-Latest-blue?color=00B16A" alt="Docker">
+  </a>
+  <a href="https://www.mongodb.com/">
+    <img src="https://img.shields.io/badge/MongoDB-Latest-blue?color=00B16A" alt="MongoDB">
+  </a>
+  <a href="https://www.rabbitmq.com/">
+    <img src="https://img.shields.io/badge/RabbitMQ-Latest-blue?color=00B16A" alt="RabbitMQ">
+  </a>
+  <a href="https://kafka.apache.org/">
+    <img src="https://img.shields.io/badge/Kafka-Latest-blue?color=00B16A" alt="Kafka">
+  </a>
+  <a href="https://redis.io/">
+    <img src="https://img.shields.io/badge/Redis-Latest-blue?color=00B16A" alt="Redis">
+  </a>
+  <a href="https://sentry.io/">
+    <img src="https://img.shields.io/badge/Sentry-Latest-blue?color=00B16A" alt="Sentry">
+  </a>
 </p>
 
 ### ⚠️Notice: Everything is packaged and versioned in Docker.
