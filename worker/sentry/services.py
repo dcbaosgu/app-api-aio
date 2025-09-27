@@ -2,8 +2,7 @@ import sentry_sdk
 
 class SentryServices:
     def __init__(self) -> None:
-        # self.base_url = 'https://a6542d71b1e25396948622b0154a34a8@o4509821824139264.ingest.us.sentry.io/4509821828399104'
-        pass
+        self.base_url = None
     
     async def parse_query_url(self, data: dict):
         if not data.get('event'):
@@ -53,5 +52,4 @@ class SentryServices:
         # issue_link = self.base_url + f'?query={issue_id}'
         return issue_id
     
-
-# sentry_services = SentryServices()
+sentry_services = SentryServices()

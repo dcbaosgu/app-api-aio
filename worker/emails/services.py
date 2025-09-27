@@ -1,8 +1,8 @@
 import os, aiosmtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-from jinja2 import Environment, FileSystemLoader
 from .config import *
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from jinja2 import Environment, FileSystemLoader
 from .exception import ErrorCode
 
 class EmailService:

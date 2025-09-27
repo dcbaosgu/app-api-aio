@@ -9,5 +9,6 @@ class SentryController:
         
     async def capture_issues(self, data: dict) -> Response:
         result = await self.service.parse(data)
-        await sentry_bot.send_telegram(result) # Telegram bot
+        await sentry_bot.send_telegram(result)
+        # print("[SENTRY-WEBHOOK]", result)
         return result

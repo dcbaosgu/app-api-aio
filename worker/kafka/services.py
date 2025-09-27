@@ -1,7 +1,7 @@
 import asyncio, json
 from .config import *
 from aiokafka import AIOKafkaProducer, AIOKafkaConsumer
-from app.modules.socket.services import socket_service
+from apps.modules.socket.services import socket_service
 
 
 class KafkaService:

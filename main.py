@@ -4,12 +4,10 @@ from fastapi import FastAPI
 from routers import api_router
 from fastapi.openapi.utils import get_openapi
 from fastapi.middleware.cors import CORSMiddleware
-from worker.sentry.config import DSN_SENTRY, ENVIRONMENT
-from app.middlewares.logging import LoggingMiddleware
+from worker.sentry.config import *
 from worker.kafka.services import kafka_service
-from app.modules.cronjob.services import scheduler, crons_job
-
-tprint("APP-API-AIO", font="slant")
+from apps.modules.cronjob.services import scheduler, crons_job
+from apps.middlewares.logging_middleware import LoggingMiddleware
 
 app = FastAPI(
     title="APP-API-AIO",
@@ -57,7 +55,6 @@ def custom_openapi():
 
 # ⚙️ App function custom schema for Swagger
 app.openapi = custom_openapi
-
 app.include_router(api_router)
 app.add_middleware(LoggingMiddleware)
 app.add_middleware(CORSMiddleware,
@@ -68,6 +65,8 @@ app.add_middleware(CORSMiddleware,
 )
 sentry_sdk.init(dsn=DSN_SENTRY, environment=ENVIRONMENT, traces_sample_rate=1.0)
 
+tprint("APP-API-AIO", font="slant")
+
 @app.on_event("startup")
 async def startup_event():
     await kafka_service.start_producer()
@@ -75,7 +74,6 @@ async def startup_event():
 
     scheduler.start()
     await crons_job.add_all_crons()
-    print("[CRON] Scheduler started and all jobs loaded")
 
 @app.on_event("shutdown")
 async def shutdown_event():
@@ -83,4 +81,3 @@ async def shutdown_event():
     await kafka_service.stop_producer()
 
     scheduler.shutdown()
-    print("[CRON] Scheduler stopped")

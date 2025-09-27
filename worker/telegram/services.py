@@ -1,6 +1,6 @@
 from telebot.async_telebot import AsyncTeleBot
-from .config import BOT_TOKEN, CHANNEL_ID, ENVIRONMENT
-from app.utils.helper import Helper
+from .config import *
+from apps.utils.helper import Helper
 
 class BaseBot:
     def __init__(self, channel_id: str):

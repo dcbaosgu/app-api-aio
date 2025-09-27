@@ -1,5 +1,5 @@
 import json, aio_pika
-from .config import RABBITMQ_URL
+from .config import settings
 from .exception import ErrorCode
 from .services import EmailService
 
@@ -13,8 +13,8 @@ class RabbitMQHandler:
     async def connect(self):
         try:
             if not self.connection:
-                # print(f"[RabbitMQ] Connecting to: {RABBITMQ_URL}")
-                self.connection = await aio_pika.connect_robust(RABBITMQ_URL)
+                # print(f"[RabbitMQ] Connecting to: {settings.RABBITMQ_URL}")
+                self.connection = await aio_pika.connect_robust(settings.RABBITMQ_URL)
                 # print("[RabbitMQ] Connection successful.")
 
                 self.channel = await self.connection.channel()
@@ -49,10 +49,10 @@ class RabbitMQHandler:
                         data = payload.get("data", {})  
                         print(f"[Consumer] Payload data details", payload)
 
-                        if payload.get("mail_type") == "otp_val":
+                        if payload.get("mail_type") == "reset_password":
                             await self.service.send_otp_email(email=payload.get("email"), fullname=payload.get("fullname"), data=data["otp_code"])
 
-                        elif payload.get("mail_type") == "bill_inf":
+                        elif payload.get("mail_type") == "bill_info":
                             await self.service.send_invoice_email(email=payload.get("email"), fullname=payload.get("fullname"), data=data)
                         
                         else: raise ErrorCode.InvalidEmailData()

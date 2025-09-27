@@ -2,6 +2,7 @@ from fastapi import APIRouter
 from .controllers import SentryController
 from . import schemas
 
+from worker.sentry.controllers import SentryController
 
 router = APIRouter(prefix="/v1/sentry", tags=["sentry"])
 sentry_controller = SentryController()
@@ -18,5 +19,4 @@ async def test_bug():
                 201: {"model": schemas.Response, "description": "Post items success"}})
 async def capture_issues(data: dict):
     result = await sentry_controller.capture_issues(data)
-    # print("[SENTRY-WEBHOOK]", result)
     return schemas.Response(**result)

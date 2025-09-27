@@ -1,19 +1,19 @@
 from fastapi import APIRouter
 
-from app.modules.home.routers import router as home_router
-from app.modules.user.routers import router as user_router
-from app.modules.product.routers import router as product_router
-from app.modules.account.router import router as account_router
-from app.modules.agent.routers import router as agent_router
-from app.modules.appsheet.routers import router as appsheet_router
-from app.modules.invoices.routers import router as invoice_router
-from app.modules.forum.routers import router as forum_router
-from app.modules.festival.routers import router as festival_router
-from app.modules.tax.routers import router as tax_router
-from app.modules.socket.routers import router as socket_router
-from app.modules.cronjob.routers import router as cron_router
+from apps.modules.home.routers import router as home_router
+from apps.modules.user.routers import router as user_router
+from apps.modules.product.routers import router as product_router
+from apps.modules.account.router import router as account_router
+from apps.modules.agent.routers import router as agent_router
+from apps.modules.appsheet.routers import router as appsheet_router
+from apps.modules.invoices.routers import router as invoice_router
+from apps.modules.forum.routers import router as forum_router
+from apps.modules.festival.routers import router as festival_router
+from apps.modules.taxcode.routers import router as taxcode_router
+from apps.modules.socket.routers import router as socket_router
+from apps.modules.cronjob.routers import router as cron_router
+from apps.modules.redis.routers import router as redis_router
 from worker.sentry.routers import router as sentry_router
-from app.modules.redis.routers import router as redis_router
 
 api_router = APIRouter()
 
@@ -26,7 +26,7 @@ api_router.include_router(appsheet_router)
 api_router.include_router(invoice_router)
 api_router.include_router(forum_router)
 api_router.include_router(festival_router)
-api_router.include_router(tax_router)
+api_router.include_router(taxcode_router)
 api_router.include_router(socket_router)
 api_router.include_router(cron_router)
 api_router.include_router(sentry_router)

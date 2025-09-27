@@ -1,5 +1,3 @@
-# version: "3.8"
-
 services:
   api:
     build: .
@@ -8,7 +6,7 @@ services:
     command: uvicorn main:app --reload --workers 2 --host 0.0.0.0 --port 8000 --proxy-headers # Development
     # command: uvicorn main:app --workers 2 --host 0.0.0.0 --port 8000 --proxy-headers        # Production
     volumes:
-      - ./:/opt/python-projects/app/
+      - ./:/opt/python-projects/apps/
     ports:
       - "127.0.0.1:8000:8000"
     env_file:
@@ -21,8 +19,8 @@ services:
     depends_on:
       mgdb:
         condition: service_healthy
-      pgdb:
-        condition: service_healthy
+      # pgdb:
+      #  condition: service_healthy
       rabbitmq:
         condition: service_healthy
       kafka:
@@ -34,11 +32,11 @@ services:
     build: .
     image: app-api-aio/worker
     restart: always
-    command: python3 /opt/python-projects/app/worker/worker_main.py
+    command: python3 /opt/python-projects/apps/worker/worker_main.py
     environment:
-    - PYTHONPATH=/opt/python-projects/app
+    - PYTHONPATH=/opt/python-projects/apps
     volumes:
-      - ./:/opt/python-projects/app/
+      - ./:/opt/python-projects/apps/
     env_file:
       - ./env/worker.env
     depends_on:
@@ -48,8 +46,8 @@ services:
         condition: service_healthy
       mgdb:
         condition: service_healthy
-      pgdb:
-        condition: service_healthy
+      # pgdb:
+      #  condition: service_healthy
 
   nginx:
     image: nginx:alpine
@@ -58,8 +56,12 @@ services:
       - api
     ports:
       - "80:80"
+      # - "443:443"  # Open when use HTTPS
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/snippets:/etc/nginx/snippets:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
     restart: always
 
   rabbitmq:
@@ -83,23 +85,23 @@ services:
     env_file:
       - ./env/worker.env
     volumes:
-      - ./kafka:/bitnami/kafka # mount NTFS
+      - ./kafka:/bitnami/kafka
     healthcheck:
       test: ["CMD-SHELL", "kafka-topics.sh --bootstrap-server kafka:9092 --list || exit 1"]
       interval: 20s
       timeout: 10s
       retries: 5
 
-  kafka-ui:
-    image: provectuslabs/kafka-ui:v0.7.2
-    container_name: kafka-ui
-    ports:
-      - "8080:8080"
-    environment:
-      - KAFKA_CLUSTERS_0_NAME=local
-      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
-    depends_on:
-      - kafka
+  # kafka-ui:
+    # image: provectuslabs/kafka-ui:v0.7.2
+    # container_name: kafka-ui
+    # ports:
+    #  - "8080:8080"
+    # environment:
+    #  - KAFKA_CLUSTERS_0_NAME=local
+    #  - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
+    # depends_on:
+    #  - kafka
 
   redis:
     image: redis:7.2-alpine
@@ -131,17 +133,17 @@ services:
       timeout: 60s
       retries: 6
 
-  pgdb:
-    image: postgres:15-alpine
-    restart: on-failure
-    env_file:
-      - ./env/app.env
-    volumes:
-      - ./postgres:/var/lib/postgresql/data
-    ports:
-      - "127.0.0.1:5432:5432"
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-postgres} -d $${POSTGRES_DB:-$${POSTGRES_USER:-postgres}}"]
-      interval: 60s
-      timeout: 60s
-      retries: 6
+  # pgdb:
+  #  image: postgres:15-alpine
+  #  restart: on-failure
+  #  env_file:
+  #    - ./env/app.env
+  #  volumes:
+  #    - ./postgres:/var/lib/postgresql/data
+  #  ports:
+  #    - "127.0.0.1:5432:5432"
+  #  healthcheck:
+  #    test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-postgres} -d $${POSTGRES_DB:-$${POSTGRES_USER:-postgres}}"]
+  #    interval: 60s
+  #    timeout: 60s
+  #    retries: 6

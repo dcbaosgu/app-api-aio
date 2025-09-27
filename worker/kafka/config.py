@@ -1,8 +1,16 @@
-import os
-from dotenv import load_dotenv
+from pydantic_settings import BaseSettings
 
-load_dotenv(dotenv_path="env/worker.env")
+class Settings(BaseSettings):
+    KAFKA_BOOTSTRAP_SERVERS: str
+    KAFKA_CHAT_TOPIC: str
+    KAFKA_CHAT_GROUP: str
 
-KAFKA_BOOTSTRAP_SERVERS = os.getenv("KAFKA_BOOTSTRAP_SERVERS")
-KAFKA_CHAT_TOPIC = os.getenv("KAFKA_CHAT_TOPIC")
-KAFKA_CHAT_GROUP = os.getenv("KAFKA_CHAT_GROUP")
+    class Config:
+        env_file = "env/worker.env"
+        extra = "ignore"
+
+settings = Settings()
+
+KAFKA_BOOTSTRAP_SERVERS = settings.KAFKA_BOOTSTRAP_SERVERS
+KAFKA_CHAT_TOPIC = settings.KAFKA_CHAT_TOPIC
+KAFKA_CHAT_GROUP = settings.KAFKA_CHAT_GROUP

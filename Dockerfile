@@ -1,10 +1,10 @@
 # Base image
-FROM python:3.12-alpine
+FROM python:3.13.7-alpine
 
 # Set work directory
-WORKDIR /opt/python-projects/app
+WORKDIR /opt/python-projects/apps
 
-# Env settings
+# Env settings no pycache
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
@@ -16,13 +16,13 @@ RUN set -eux \
     && rm -rf /root/.cache/pip
 
 # Copy requirements file
-COPY ./requirements.txt /opt/python-projects/app/requirements.txt
+COPY ./requirements.txt /opt/python-projects/apps/requirements.txt
 
 # Install Python dependencies
-RUN pip install -r /opt/python-projects/app/requirements.txt
+RUN pip install -r /opt/python-projects/apps/requirements.txt
 
 # Install extra tools for healthcheck and SSL
 RUN apk add --no-cache curl openssl
 
 # Copy project files
-COPY . /opt/python-projects/app/
+COPY . /opt/python-projects/apps/

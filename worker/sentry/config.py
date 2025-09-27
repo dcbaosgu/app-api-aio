@@ -1,7 +1,14 @@
-import os
-from dotenv import load_dotenv
+from pydantic_settings import BaseSettings
 
-load_dotenv(dotenv_path="env/worker.env")
+class Settings(BaseSettings):
+    DSN_SENTRY: str
+    ENVIRONMENT: str
 
-DSN_SENTRY = os.getenv("DSN_SENTRY")
-ENVIRONMENT = os.getenv("ENVIRONMENT")
+    class Config:
+        env_file = "env/app.env"
+        extra = "ignore"
+
+settings = Settings()
+
+DSN_SENTRY = settings.DSN_SENTRY
+ENVIRONMENT = settings.ENVIRONMENT

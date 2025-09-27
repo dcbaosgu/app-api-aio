@@ -1,8 +1,9 @@
 __pycache__
-database/
-postgres/
-mongo/
-caching/
-backup/
+database
+postgres
+mongo
+caching
+backup
 CNAME
-kafka/
+kafka
+env

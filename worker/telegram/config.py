@@ -1,8 +1,16 @@
-import os
-from dotenv import load_dotenv
+from pydantic_settings import BaseSettings
 
-load_dotenv(dotenv_path="env/worker.env")
+class Settings(BaseSettings):
+    BOT_TOKEN: str
+    CHANNEL_ID: str
+    ENVIRONMENT: str
 
-BOT_TOKEN = os.getenv("BOT_TOKEN")
-CHANNEL_ID = os.getenv("CHANNEL_ID")
-ENVIRONMENT = os.getenv("ENVIRONMENT")
+    class Config:
+        env_file = "env/worker.env"
+        extra = "ignore"
+
+settings = Settings()
+
+BOT_TOKEN = settings.BOT_TOKEN
+CHANNEL_ID = settings.CHANNEL_ID
+ENVIRONMENT = settings.ENVIRONMENT
