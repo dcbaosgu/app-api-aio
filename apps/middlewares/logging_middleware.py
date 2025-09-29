@@ -1,8 +1,8 @@
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
 from apps.middlewares.logging_utils import extract_user_id_from_request, get_request_data, get_response_data
-from apps.mongo.base import BaseCRUD
-from apps.mongo.engine import engine_logs
+from apps.mongodb.base import BaseCRUD
+from apps.mongodb.engine import engine_logs
 from apps.utils.helper import Helper
 
 logs_crud = BaseCRUD("loggings", engine_logs)

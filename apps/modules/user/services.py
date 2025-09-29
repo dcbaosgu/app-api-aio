@@ -1,5 +1,5 @@
-from apps.mongo.base import BaseCRUD
-from apps.mongo.engine import engine_aio
+from apps.mongodb.base import BaseCRUD
+from apps.mongodb.engine import engine_aio
 from apps.utils.validator import Validator
 from apps.auth.services import auth_services
 from .exception import ErrorCode

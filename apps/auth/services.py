@@ -1,8 +1,8 @@
 from jose import jwt
 from .config import *
-from apps.mongo.base import BaseCRUD
+from apps.mongodb.base import BaseCRUD
 from apps.utils.helper import Helper
-from apps.mongo.engine import engine_aio
+from apps.mongodb.engine import engine_aio
 from bcrypt import checkpw, gensalt, hashpw
 
 

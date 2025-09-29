@@ -41,7 +41,6 @@ pip freeze | ForEach-Object { pip uninstall -y $_ }
 
 # DELETE CACHE DOCKER
 docker system prune -a --volumes --force
-docker builder prune --all --force
 
 # DOCKER BUILT AND START
 docker-compose build

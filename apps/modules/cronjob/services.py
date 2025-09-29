@@ -4,8 +4,8 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 from apscheduler.jobstores.base import JobLookupError
 
-from apps.mongo.base import BaseCRUD
-from apps.mongo.engine import engine_aio
+from apps.mongodb.base import BaseCRUD
+from apps.mongodb.engine import engine_aio
 from .exception import ErrorCode
 
 cron_crud = BaseCRUD("cronjobs", engine_aio)

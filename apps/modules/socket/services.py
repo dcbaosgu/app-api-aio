@@ -1,7 +1,7 @@
 from typing import Dict, Tuple
 from . import schemas
-from apps.mongo.base import BaseCRUD
-from apps.mongo.engine import engine_aio
+from apps.mongodb.base import BaseCRUD
+from apps.mongodb.engine import engine_aio
 from apps.utils.helper import Helper
 from .exception import ErrorCode
 

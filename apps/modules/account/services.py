@@ -1,5 +1,5 @@
-from apps.mongo.base import BaseCRUD
-from apps.mongo.engine import engine_aio
+from apps.mongodb.base import BaseCRUD
+from apps.mongodb.engine import engine_aio
 from apps.auth.services import auth_services
 from worker.emails.controllers import EmailController
 from .schemas import LoginRequest, ForgotPasswordRequest
