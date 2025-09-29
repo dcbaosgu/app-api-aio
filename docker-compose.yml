@@ -77,7 +77,8 @@ services:
       retries: 3
 
   kafka:
-    image: bitnami/kafka:3.6.1
+    # image: bitnami/kafka:3.6.1 
+    image: bitnamilegacy/kafka:3.6.1
     container_name: kafka
     restart: unless-stopped
     ports:

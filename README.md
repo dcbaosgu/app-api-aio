@@ -40,7 +40,8 @@ pip freeze > requirements.txt
 pip freeze | ForEach-Object { pip uninstall -y $_ }
 
 # DELETE CACHE DOCKER
-docker system prune -a --volumes --force
+docker compose down --rmi all
+docker system prune -a --volumes --f (f or force)
 
 # DOCKER BUILT AND START
 docker-compose build
