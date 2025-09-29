@@ -92,6 +92,9 @@ services:
       interval: 20s
       timeout: 10s
       retries: 5
+    mem_limit: 1G       # limit RAM
+    cpus: 0.5           # limit 50% in 1 core CPU
+    
 
   # kafka-ui:
     # image: provectuslabs/kafka-ui:v0.7.2
