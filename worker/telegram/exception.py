@@ -10,10 +10,10 @@ class StandardException(HTTPException):
 class ErrorCode:
 
     @staticmethod
-    def SendMailFailed():
+    def SendBotFailed():
         return StandardException(
-            type="email/error/send-failed",
+            type="tele/error/send-failed",
             status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            title="Email Send Failed",
-            detail="Failed to send email. Please try again later."
+            title="Send Telegram Failed",
+            detail="Failed to send data. Please try again later."
         )

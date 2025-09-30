@@ -1,20 +1,20 @@
 import json, aio_pika
-from .config import settings
+from .config import RABBITMQ_URL
 from .exception import ErrorCode
-from .services import EmailService
+from worker.emails.services import EmailService
 
-class RabbitMQHandler:
+class RabbitMQServices:
     def __init__(self, queue_name: str = "email_queue"):
         self.queue_name = queue_name
         self.connection = None
         self.channel = None
-        self.service = EmailService()
+        self.email_service = EmailService()
 
     async def connect(self):
         try:
             if not self.connection:
-                # print(f"[RabbitMQ] Connecting to: {settings.RABBITMQ_URL}")
-                self.connection = await aio_pika.connect_robust(settings.RABBITMQ_URL)
+                # print(f"[RabbitMQ] Connecting to: {RABBITMQ_URL}")
+                self.connection = await aio_pika.connect_robust(RABBITMQ_URL)
                 # print("[RabbitMQ] Connection successful.")
 
                 self.channel = await self.connection.channel()
@@ -24,7 +24,10 @@ class RabbitMQHandler:
         except Exception as e:
             raise ErrorCode.RabbitConnect()
 
-    async def producer(self, payload: dict):
+    async def producer(self, email: str, fullname: str, data: dict, mail_type: str):
+        
+        payload = {"email": email, "fullname": fullname, "data": data, "mail_type": mail_type}
+        
         try:
             await self.connect()
             
@@ -50,10 +53,10 @@ class RabbitMQHandler:
                         print(f"[Consumer] Payload data details", payload)
 
                         if payload.get("mail_type") == "reset_password":
-                            await self.service.send_otp_email(email=payload.get("email"), fullname=payload.get("fullname"), data=data["otp_code"])
+                            await self.email_service.send_otp(email=payload.get("email"), fullname=payload.get("fullname"), data=data["otp_code"])
 
                         elif payload.get("mail_type") == "bill_info":
-                            await self.service.send_invoice_email(email=payload.get("email"), fullname=payload.get("fullname"), data=data)
+                            await self.email_service.send_invoice(email=payload.get("email"), fullname=payload.get("fullname"), data=data)
                         
                         else: raise ErrorCode.InvalidEmailData()
 

@@ -1,7 +1,7 @@
 from apps.mongo.base import BaseCRUD
 from apps.mongo.engine import engine_aio
 from apps.auth.services import auth_services
-from worker.emails.controllers import EmailController
+from worker.rabbitmq.services import RabbitMQServices
 from .schemas import LoginRequest, ForgotPasswordRequest
 from apps.utils.helper import Helper
 from .exception import ErrorCode
@@ -13,7 +13,7 @@ account_crud = BaseCRUD("users", engine_aio)
 class AccountService:
     def __init__(self, crud: BaseCRUD):
         self.crud = crud
-        self.email_controller = EmailController()
+        self.rabbitmq_service = RabbitMQServices()
 
     async def login(self, data: LoginRequest):
         email = data.email
@@ -40,18 +40,17 @@ class AccountService:
             raise ErrorCode.EmailNotFound()
 
         otp_code = Helper.generate_secret_otp()
-        expire_otp = Helper.get_timestamp() + 5 * 60
+        expire_otp = Helper.get_timestamp() + 15 * 60
 
         await self.crud.update_by_id(_id=user["_id"], data={"otp_code": otp_code, "expire_otp": expire_otp})
 
-        await self.email_controller.send_email_producer(
+        await self.rabbitmq_service.producer(
             email=user["email"],
             fullname=user["fullname"],
             data={"otp_code": otp_code},
             mail_type="reset_password"
         )
-
-        return {"message": f"OTP sent to {email} and valid for 5 minutes"}
+        return {"message": f"OTP sent to {email} & valid for 15 minutes"}
     
     
     async def forgot_password(self, data: ForgotPasswordRequest):

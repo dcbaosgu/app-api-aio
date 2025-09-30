@@ -28,7 +28,7 @@ class EmailService:
             raise ErrorCode.SendMailFailed()
 
 
-    async def send_otp_email(self, email: str, fullname: str, data: str):
+    async def send_otp(self, email: str, fullname: str, data: str):
         try:
             template = self.env.get_template("email_otp.html")
             html_content = template.render(fullname=fullname, otp_code=data)
@@ -46,7 +46,7 @@ class EmailService:
             raise ErrorCode.SendMailFailed()
 
 
-    async def send_invoice_email(self, email: str, fullname: str, data: dict):
+    async def send_invoice(self, email: str, fullname: str, data: dict):
         try:
             data = data.copy()
             data["fullname"] = fullname

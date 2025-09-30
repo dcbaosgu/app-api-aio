@@ -1,5 +1,6 @@
 from telebot.async_telebot import AsyncTeleBot
 from .config import *
+from .exception import ErrorCode
 from apps.utils.helper import Helper
 
 class BaseBot:
@@ -22,7 +23,8 @@ class BaseBot:
                 disable_web_page_preview=True,
             )
         except Exception as e:
-            print(f"Error when sending telegram message: {e}")
+            # print(f"Error when sending telegram message: {e}")
+            raise ErrorCode.SendBotFailed()
 
 
 class SentryBot(BaseBot):
@@ -78,7 +80,6 @@ class InvoiceBot(BaseBot):
         )
 
         await self.send_message(message)
-
 
 
 

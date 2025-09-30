@@ -1,7 +1,6 @@
 from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
-    RABBITMQ_URL: str
     USERNAME_SMTP: str
     PASSWORD_SMTP: str
     HOST_SMTP: str
@@ -13,7 +12,6 @@ class Settings(BaseSettings):
 
 settings = Settings()
 
-RABBITMQ_URL = settings.RABBITMQ_URL
 USERNAME_SMTP = settings.USERNAME_SMTP
 PASSWORD_SMTP = settings.PASSWORD_SMTP
 HOST_SMTP = settings.HOST_SMTP
