@@ -14,10 +14,17 @@ async def create_cron(data: schemas.CronCreate):
     result = await controller.create(data.model_dump())
     return schemas.CronResponse(**result)
 
-@router.get("/get/{cron_id}", status_code=200, responses={
+@router.get("/getdb/{cron_id}", status_code=200, responses={
                 200: {"model": schemas.CronResponse, "description": "Get items success"}})
-async def get_cron(cron_id: str):
-    result = await controller.get(cron_id)
+async def get_db(cron_id: str):
+    result = await controller.getdb(cron_id)
+    return result
+
+@router.get("/getcron", status_code=200, responses={
+                200: {"model": schemas.CronRuntimeResponse, "description": "Fetch items success"}
+            })
+async def get_cron_runtime():
+    result = await controller.get_cron_runtime()
     return result
 
 @router.put("/edit/{cron_id}", status_code=200, responses={

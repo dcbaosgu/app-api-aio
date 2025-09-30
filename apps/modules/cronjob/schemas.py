@@ -11,6 +11,7 @@ class CronCreate(BaseModel):
     schedule: str  # m h d M w
     enable: bool
 
+
 class CronUpdate(BaseModel):
     task: Optional[str] = None
     endpoint: Optional[str] = None
@@ -20,6 +21,7 @@ class CronUpdate(BaseModel):
     response: Optional[dict] = None
     schedule: Optional[str] = None
     enable: Optional[bool] = None
+
 
 class CronResponse(BaseModel):
     id: str = Field(alias="_id")
@@ -34,9 +36,23 @@ class CronResponse(BaseModel):
     created_at: Optional[float] 
     updated_at: Optional[float] = None
 
+
 class PaginatedCronResponse(BaseModel):
     total: int
     page: int
     limit: int
     total_pages: int
     results: List[CronResponse]
+
+
+class CronRuntimeItem(BaseModel):
+    id: str
+    name: str
+    next_run_time: Optional[str]
+    trigger: str
+    func_ref: str
+
+
+class CronRuntimeResponse(BaseModel):
+    total: int
+    results: List[CronRuntimeItem]

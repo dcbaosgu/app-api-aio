@@ -23,6 +23,7 @@ class CronsJob:
                 self.execute_job,
                 trigger=trigger,
                 id=cron_id,
+                name=cron["task"],
                 kwargs={"cron_id": cron_id},
                 replace_existing=True,
             )
@@ -96,21 +97,6 @@ class CronsJob:
             if cron.get("enable", True):
                 await self.add_cron(cron)
 
-    def show_all_crons(self):
-        jobs = self.scheduler.get_jobs()
-        if not jobs:
-            print("[CRON] 📭 Không có cron nào đang chạy")
-            return
-
-        print("\n[CRON] 📋 Danh sách tất cả cron:")
-        for job in jobs:
-            print("────────────────────────────────────────────")
-            print(f"🆔 ID: {job.id}")
-            print(f"📌 Tên hàm: {job.name}")
-            print(f"⏰ Lần chạy tiếp theo: {job.next_run_time}")
-            print(f"🔁 Trigger: {job.trigger}")
-            print(f"📦 Func: {job.func_ref}")
-
 
 class CronServices:
     def __init__(self, crud: BaseCRUD):
@@ -128,10 +114,28 @@ class CronServices:
         await crons_job.update_cron(result)
         return result
 
-    async def get(self, _id):
+    async def getdb(self, _id):
         result = await self.crud.get_by_id(_id)
         if not result:
             raise ErrorCode.InvalidCronId()
+        return result
+    
+    async def get_cron_runtime(self):
+        jobs = crons_job.scheduler.get_jobs()
+        if not jobs:
+            return {"total": 0,"results": []}
+
+        cron_list = []
+        for job in jobs:
+            cron_list.append({
+                "id": job.id,
+                "name": job.name,
+                "next_run_time": job.next_run_time.isoformat() if job.next_run_time else None,
+                "trigger": str(job.trigger),
+                "func_ref": job.func_ref,
+            })
+
+        result = {"total": len(cron_list),"results": cron_list}
         return result
 
     async def delete(self, _id):

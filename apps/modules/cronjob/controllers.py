@@ -10,8 +10,12 @@ class CronController:
         result = await self.service.create(data)
         return result
 
-    async def get(self, _id):
-        result = await self.service.get(_id)
+    async def getdb(self, _id):
+        result = await self.service.getdb(_id)
+        return result
+    
+    async def get_cron_runtime(self):
+        result = await self.service.get_cron_runtime()
         return result
     
     async def update(self, _id, data):
