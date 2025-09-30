@@ -65,9 +65,13 @@ net stop RabbitMQ && net start RabbitMQ
 redis://:APP-API-AIO@127.0.0.1:6379/0
 
 # RUN DATA BACKUP
-.\dump_db.ps1 (windows)
-chmod +x dump_db.sh (linux)
-./dump_db.sh (linux)
+.\bin\windows\dump_db.ps1 (windows)
+
+chmod +x /bin/linux/dump_db.sh (linux)
+./bin/linux/dump_db.sh
+
+chmod +x ./bin/macos/dump_db.command (macos)      
+./bin/linux/dump_db.sh
 
 # CREATE CHANNEL AND GET ID
 # (start bot, add bot in channel (set admin) -> send channel -> get id)

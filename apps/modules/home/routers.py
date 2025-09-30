@@ -12,7 +12,7 @@ async def home():
     return result
 
 
-@router.get("/database/export", status_code=200, responses={
+@router.get("/db/export", status_code=200, responses={
                 200: {"description": "Get items success"}})
 async def export_database():
     try:
