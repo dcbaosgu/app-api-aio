@@ -1,8 +1,7 @@
 from fastapi import WebSocket, WebSocketDisconnect
 from . import schemas
 from .services import socket_service
-from worker.kafka.controllers import kafka_controller
-
+from worker.kafka.services import kafka_service
 
 class ChatController:
     def __init__(self):
@@ -16,9 +15,9 @@ class ChatController:
         try:
             await self.service.connect(channel_id, websocket, token)
             while True:
-                data = schemas.MessageSend(**await websocket.receive_json())
-                # await self.service.send_message({"channel_id": channel_id, **data.dict()}, token) # Send direct
-                await kafka_controller.publish_message(channel_id=channel_id, token=token, message={**data.dict()})
+                message = schemas.MessageSend(**await websocket.receive_json())
+                # await self.service.send_message(data={"channel_id": channel_id, **message.dict()}, token=token) # Send direct
+                await kafka_service.send(channel_id=channel_id, token=token, message=message.model_dump())        # Send queue
 
         except WebSocketDisconnect:
             print(f"[CONTROLLER] - Client disconnected from {channel_id}")

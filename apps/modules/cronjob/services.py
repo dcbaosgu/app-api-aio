@@ -96,6 +96,21 @@ class CronsJob:
             if cron.get("enable", True):
                 await self.add_cron(cron)
 
+    def show_all_crons(self):
+        jobs = self.scheduler.get_jobs()
+        if not jobs:
+            print("[CRON] 📭 Không có cron nào đang chạy")
+            return
+
+        print("\n[CRON] 📋 Danh sách tất cả cron:")
+        for job in jobs:
+            print("────────────────────────────────────────────")
+            print(f"🆔 ID: {job.id}")
+            print(f"📌 Tên hàm: {job.name}")
+            print(f"⏰ Lần chạy tiếp theo: {job.next_run_time}")
+            print(f"🔁 Trigger: {job.trigger}")
+            print(f"📦 Func: {job.func_ref}")
+
 
 class CronServices:
     def __init__(self, crud: BaseCRUD):

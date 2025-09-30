@@ -1,5 +1,6 @@
 import asyncio, json
 from .config import *
+from .exception import ErrorCode
 from aiokafka import AIOKafkaProducer, AIOKafkaConsumer
 from apps.modules.socket.services import socket_service
 
@@ -22,14 +23,19 @@ class KafkaService:
         if self._producer:
             await self._producer.stop()
 
-    async def send(self, topic: str, key: str, value: dict):
+    async def send(self, channel_id: str, token: str, message: dict):
+
+        key = channel_id
+        value={"channel_id": channel_id, "token": token, **message}
+
         if not self._producer:
             await self.start_producer()
         try:
-            result = await self._producer.send_and_wait(topic, key=key, value=value)
+            result = await self._producer.send_and_wait(topic=KAFKA_CHAT_TOPIC, key=key, value=value)
             print(f"[KAFKA] Message sent: {result}")
         except Exception as e:
-            print(f"[KAFKA] Error sending message: {e}")
+            # print(f"[KAFKA] Error sending message: {e}")
+            raise ErrorCode.KafkaSendFailed()
 
 
     async def start_consumer(self, topic=KAFKA_CHAT_TOPIC, group_id=KAFKA_CHAT_GROUP):
@@ -55,8 +61,10 @@ class KafkaService:
                 try:
                     await socket_service.send_message(data, data.get("token"))
                 except Exception as e:
-                    print(f"[KAFKA] Error processing message: {e}")
+                    # print(f"[KAFKA] Error processing message: {e}")
+                    raise ErrorCode.KafkaMessageProcessingFailed()
         except Exception as e:
-            print(f"[KAFKA] Consumer fatal error: {e}")
+            # print(f"[KAFKA] Consumer fatal error: {e}")
+            raise ErrorCode.KafkaConsumerFatalError()
 
 kafka_service = KafkaService()
