@@ -34,6 +34,7 @@ class BaseCRUD:
         result = {"status": "success"} if result.deleted_count > 0 else {"status": "failed"}
         return result
     
+
     async def get_one_query(self, query: dict) -> dict:
         query = Helper.string_to_object(query) # Check query contain _id
         result = await self.collection.find_one(query)
@@ -48,7 +49,7 @@ class BaseCRUD:
         result = await self.get_one_query(query)
         return result
 
-    async def update_no_limit(self, query: dict, data: dict, **kwargs):
+    async def update_one_nomit(self, query: dict, data: dict, **kwargs):
         query = Helper.string_to_object(query) # Check query contain _id
 
         if not any(key.startswith("$") for key in data.keys()):
@@ -63,6 +64,50 @@ class BaseCRUD:
             await self.collection.update_one(query, data, **kwargs)
 
         return await self.get_one_query(query)
+    
+    
+    async def update_all_query(self, query: dict, data: dict):
+        query = Helper.string_to_object(query) 
+        data["updated_at"] = Helper.get_timestamp()
+
+        await self.collection.update_many(query, {"$set": data})
+
+        cursor = self.collection.find(query)
+        results = [Helper.object_to_string(doc) async for doc in cursor]
+        total = len(results)
+
+        result = {"total": total, "results": results}
+        return result
+
+    async def delete_all_query(self, query: dict):
+        query = Helper.string_to_object(query)
+        cursor = self.collection.find(query, {"_id": 1})
+        list_id = [str(doc["_id"]) async for doc in cursor]
+
+        result = await self.collection.delete_many(query)
+        total = result.deleted_count
+
+        result = {"total": total,"results": list_id}
+        return result
+    
+    async def update_many_nomit(self, query: dict, data: dict, **kwargs):
+        query = Helper.string_to_object(query)  # Check query contain _id
+
+        if not any(key.startswith("$") for key in data.keys()):
+            # Case 1: Replace data if not operator
+            data["updated_at"] = Helper.get_timestamp()
+            result = await self.collection.update_many(query, {"$set": data}, **kwargs)
+        else:
+            # Case 2: $set, $unset, $push, $pull
+            if "$set" not in data:
+                data["$set"] = {}
+            data["$set"]["updated_at"] = Helper.get_timestamp()
+            result = await self.collection.update_many(query, data, **kwargs)
+
+        result = {"status": "success", "matched": result.matched_count, "modified": result.modified_count}
+        
+        return result
+    
 
     async def search(
         self,
@@ -93,7 +138,7 @@ class BaseCRUD:
     def _get_sort(self, sort_field: str, is_desc: bool):
         result = [(sort_field, DESCENDING if is_desc else ASCENDING)]
         return result
-
+    
     async def aggregate_by_pipeline(self, pipeline):
         documents = self.collection.aggregate(pipeline)
         if not documents:
@@ -102,28 +147,3 @@ class BaseCRUD:
         async for document in documents:
             results.update(document)
         return results
-    
-    async def update_all_query(self, query: dict, data: dict):
-        query = Helper.string_to_object(query) 
-        data["updated_at"] = Helper.get_timestamp()
-
-        await self.collection.update_many(query, {"$set": data})
-
-        cursor = self.collection.find(query)
-        results = [Helper.object_to_string(doc) async for doc in cursor]
-        total = len(results)
-
-        result = {"total": total, "results": results}
-        return result
-    
-
-    async def delete_all_query(self, query: dict):
-        query = Helper.string_to_object(query)
-        cursor = self.collection.find(query, {"_id": 1})
-        ids = [str(doc["_id"]) async for doc in cursor]
-
-        result = await self.collection.delete_many(query)
-        total_deleted = result.deleted_count
-
-        result = {"total": total_deleted,"results": ids}
-        return result

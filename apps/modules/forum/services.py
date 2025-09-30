@@ -58,7 +58,7 @@ class PostServices:
         if not thread: raise ErrorCode.ThreadNotFound()
         if not user: raise ErrorCode.UserNotFound()
 
-        await self.thread_crud.update_no_limit({"_id": thread["_id"]}, {"$inc": {"comments": 1}})
+        await self.thread_crud.update_one_nomit({"_id": thread["_id"]}, {"$inc": {"comments": 1}})
 
         result = await self.post_crud.create(data)
         return result
@@ -82,7 +82,7 @@ class PostServices:
 
         thread = await self.thread_crud.get_by_id(post.get("thread_id"))
         if thread: 
-            await self.thread_crud.update_no_limit({"_id": thread["_id"]}, {"$inc": {"comments": -1}})
+            await self.thread_crud.update_one_nomit({"_id": thread["_id"]}, {"$inc": {"comments": -1}})
 
         result = await self.post_crud.delete_by_id(_id)
         return result

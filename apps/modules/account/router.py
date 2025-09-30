@@ -26,6 +26,12 @@ async def get_otp(data: schemas.GetOTPRequest):
     result = await controller.get_otp(data)
     return result
 
+@router.post("/clean-otp", status_code=201, responses={
+                201: {"description": "Clean items success"}})
+async def clean_otp():
+    result = await controller.clean_otp()
+    return result
+
 @router.post("/forgot-password", status_code=201, responses={
                 201: {"model": schemas.ForgotPasswordRequest, "description": "Post items success"}})
 async def forgot_password(data: schemas.ForgotPasswordRequest):

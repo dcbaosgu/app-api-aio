@@ -14,8 +14,8 @@ class CronController:
         result = await self.service.getdb(_id)
         return result
     
-    async def get_cron_runtime(self):
-        result = await self.service.get_cron_runtime()
+    async def runtime(self):
+        result = await self.service.runtime()
         return result
     
     async def update(self, _id, data):

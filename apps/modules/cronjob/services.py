@@ -120,7 +120,7 @@ class CronServices:
             raise ErrorCode.InvalidCronId()
         return result
     
-    async def get_cron_runtime(self):
+    async def runtime(self):
         jobs = crons_job.scheduler.get_jobs()
         if not jobs:
             return {"total": 0,"results": []}

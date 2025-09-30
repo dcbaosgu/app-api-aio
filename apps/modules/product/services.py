@@ -46,7 +46,7 @@ class ProductServices:
                 raise ErrorCode.SerialAlreadyExists()
 
         payload = {"$push": {"serial": {"number": number, "status": status}}}
-        await self.crud.update_no_limit({"_id": product_id}, payload)
+        await self.crud.update_one_nomit({"_id": product_id}, payload)
         return {"status": "success", "message": f"Serial {number} added successfully"}
 
 
@@ -70,7 +70,7 @@ class ProductServices:
             }
         }
         array_filters = [{"elem.number": number_old}]
-        await self.crud.update_no_limit({"_id": product_id}, payload, array_filters=array_filters)
+        await self.crud.update_one_nomit({"_id": product_id}, payload, array_filters=array_filters)
         return {"status": "success", "message": f"Serial {number_old} updated to {number_new}"}
 
 
@@ -88,6 +88,6 @@ class ProductServices:
             raise ErrorCode.SerialNotFound()
 
         payload = {"$pull": {"serial": {"number": number}}}
-        await self.crud.update_no_limit({"_id": product_id}, payload)
+        await self.crud.update_one_nomit({"_id": product_id}, payload)
         return {"status": "success", "message": f"Serial {number} deleted successfully"}
     """

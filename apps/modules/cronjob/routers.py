@@ -20,11 +20,11 @@ async def get_db(cron_id: str):
     result = await controller.getdb(cron_id)
     return result
 
-@router.get("/getcron", status_code=200, responses={
+@router.get("/runtime", status_code=200, responses={
                 200: {"model": schemas.CronRuntimeResponse, "description": "Fetch items success"}
             })
-async def get_cron_runtime():
-    result = await controller.get_cron_runtime()
+async def runtime():
+    result = await controller.runtime()
     return result
 
 @router.put("/edit/{cron_id}", status_code=200, responses={

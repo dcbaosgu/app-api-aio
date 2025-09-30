@@ -52,6 +52,13 @@ class AccountService:
         )
         return {"message": f"OTP sent to {email} & valid for 15 minutes"}
     
+    async def clean_otp(self):
+        now = Helper.get_timestamp()
+        query = {"expire_otp": {"$lt": now}} # otp has expired
+        data = {"$unset": {"expire_otp": "", "otp_code": ""}}
+        
+        result = await self.crud.update_many_nomit(query, data)
+        return result
     
     async def forgot_password(self, data: ForgotPasswordRequest):
         user = await self.crud.get_one_query({"email": data.email})
@@ -69,11 +76,10 @@ class AccountService:
         
         hashed_password = (await auth_services.hash_password(data.new_password)).decode()
 
-        await self.crud.update_no_limit(
+        await self.crud.update_one_nomit(
             {"_id": user["_id"]},
             {
                 "$set": {"password": hashed_password},
                 "$unset": {"otp_code": "", "expire_otp": ""}
-            }
-        )
+            })
         return {"message": "Password has been reset successfully"}
