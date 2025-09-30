@@ -18,16 +18,16 @@ services:
       timeout: 3s
       retries: 3
     depends_on:
-      mgdb:
-        condition: service_healthy
-      # pgdb:
-      #  condition: service_healthy
       rabbitmq:
         condition: service_healthy
       kafka:
         condition: service_healthy
       redis:
         condition: service_healthy
+      mgdb:
+        condition: service_healthy
+      # pgdb:
+      #  condition: service_healthy
 
   worker:
     build: .
@@ -51,7 +51,7 @@ services:
       #  condition: service_healthy
 
   nginx:
-    image: nginx:alpine
+    image: nginx:1.29.1-alpine
     container_name: nginx
     depends_on:
       - api
@@ -66,7 +66,7 @@ services:
     restart: always
 
   rabbitmq:
-    image: rabbitmq:3-management-alpine
+    image: rabbitmq:3.13.7-management-alpine
     restart: on-failure
     ports:
       - "5672:5672"
@@ -94,18 +94,6 @@ services:
       retries: 5
     mem_limit: 1G       # limit RAM
     cpus: 0.5           # limit 50% in 1 core CPU
-    
-
-  # kafka-ui:
-    # image: provectuslabs/kafka-ui:v0.7.2
-    # container_name: kafka-ui
-    # ports:
-    #  - "8080:8080"
-    # environment:
-    #  - KAFKA_CLUSTERS_0_NAME=local
-    #  - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
-    # depends_on:
-    #  - kafka
 
   redis:
     image: redis:7.2-alpine
@@ -124,7 +112,7 @@ services:
       retries: 3
 
   mgdb:
-    image: mongo:latest
+    image: mongo:8.0.14
     restart: on-failure
     volumes:
       - ./mongo_data:/data/db
@@ -138,16 +126,27 @@ services:
       retries: 6
 
   # pgdb:
-  #  image: postgres:15-alpine
-  #  restart: on-failure
-  #  env_file:
-  #    - ./env/app.env
-  #  volumes:
-  #    - ./postgres_data:/var/lib/postgresql/data
-  #  ports:
-  #    - "127.0.0.1:5432:5432"
-  #  healthcheck:
-  #    test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-postgres} -d $${POSTGRES_DB:-$${POSTGRES_USER:-postgres}}"]
-  #    interval: 60s
-  #    timeout: 60s
-  #    retries: 6
+    #  image: postgres:15-alpine
+    #  restart: on-failure
+    #  env_file:
+    #    - ./env/app.env
+    #  volumes:
+    #    - ./postgres_data:/var/lib/postgresql/data
+    #  ports:
+    #    - "127.0.0.1:5432:5432"
+    #  healthcheck:
+    #    test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-postgres} -d $${POSTGRES_DB:-$${POSTGRES_USER:-postgres}}"]
+    #    interval: 60s
+    #    timeout: 60s
+    #    retries: 6
+
+  # kafka-ui:
+    # image: provectuslabs/kafka-ui:v0.7.2
+    # container_name: kafka-ui
+    # ports:
+    #  - "8080:8080"
+    # environment:
+    #  - KAFKA_CLUSTERS_0_NAME=local
+    #  - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
+    # depends_on:
+    #  - kafka

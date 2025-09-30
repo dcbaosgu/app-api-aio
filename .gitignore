@@ -1,8 +1,8 @@
 __pycache__
 .pytest_cache
+caching
 env
 backup
-caching
 database
 postgres_data
 mongo_data

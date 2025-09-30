@@ -52,6 +52,11 @@ docker-compose up --no-log-prefix
 docker exec -it app-api-aio-api-1 /bin/sh
 cd /opt/python-projects/apps/
 
+# CHECK VERSION SERVICES
+docker exec -it app-api-aio-mgdb-1 mongod --version
+docker exec -it nginx nginx -v
+docker exec -it app-api-aio-rabbitmq-1 rabbitmqctl version
+
 # RABBITMQ NOT WORKING -> STOP -> START AGAIN
 rabbitmq-plugins enable rabbitmq_management
 net stop RabbitMQ && net start RabbitMQ
@@ -72,7 +77,6 @@ https://api.telegram.org/bot<BOT_TOKEN>/getUpdates
 docker exec -it app-api-aio-api-1 \
 
 sh -c "PYTHONPATH=/opt/python-projects/apps pytest -p no:warnings /opt/python-projects/apps/test/test_ping.py"
-
 
 # SSH SERVER AWS
 icacls .\ec2.pem /inheritance:r
