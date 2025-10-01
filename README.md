@@ -52,6 +52,12 @@ docker-compose up --no-log-prefix
 docker exec -it app-api-aio-api-1 /bin/sh
 cd /opt/python-projects/apps/
 
+# EX:FFMPEG CHUNK VIDEO
+# (access folder docker)
+ffmpeg -version
+chmod +x bin/linux/apple_hls.sh
+./bin/linux/apple_hls.sh
+
 # CHECK VERSION SERVICES
 docker exec -it app-api-aio-mgdb-1 mongod --version
 docker exec -it nginx nginx -v

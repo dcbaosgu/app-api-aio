@@ -15,6 +15,9 @@ RUN set -eux \
     && pip install --upgrade pip setuptools wheel \
     && rm -rf /root/.cache/pip
 
+# Install ffmpeg (alpine package)
+RUN apk add --no-cache ffmpeg
+
 # Copy requirements file
 COPY ./requirements.txt /opt/python-projects/apps/requirements.txt
 
