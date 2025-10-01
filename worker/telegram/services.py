@@ -59,8 +59,8 @@ class InvoiceBot(BaseBot):
         for idx, item in enumerate(invoice.get("items", []), start=1):
             items_text += (
                 f"\n  {idx}. <b>{item.get('name')}</b>\n"
-                f"     ID: {item.get('product_id')}\n"
-                f"     Qty: {item.get('quantity')} | "
+                f"ID: {item.get('product_id')}\n"
+                f"Qty: {item.get('quantity')} | "
                 f"Price: {item.get('price')} | "
                 f"Total: {float(item.get('price', 0)) * int(item.get('quantity', 0))}"
             )

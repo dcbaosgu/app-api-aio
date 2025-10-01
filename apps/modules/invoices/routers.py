@@ -48,14 +48,16 @@ async def delete_invoice(invoice_id: str):
     200: {"model": schemas.PaginatedInvoiceResponse, "description": "Get items success"},
 })
 async def list_invoices(
-    page: int = Query(1, gt=0, description="Số trang"),
-    limit: int = Query(10, le=100, description="Số item / mỗi trang"),
-    user_id: Optional[str] = Query(None, description="Lọc theo user"),
-    status: Optional[str] = Query(None, description="Lọc theo trạng thái"),
+    page: int = Query(1, gt=0, description="Page number"),
+    limit: int = Query(10, le=100, description="Item / page"),
+    user_id: Optional[str] = Query(None, description="Filter user"),
+    status: Optional[str] = Query(None, description="Status: pending /confirmed / delivery / finished/ cancelled"),
+    start_time: Optional[str] = Query(None, description="Start day (Format: DD/MM/YYYY) - GMT+7)"),
+    end_time: Optional[str] = Query(None, description="End day (Format: DD/MM/YYYY) - GMT+7)")
 ):
     query = {}
     if user_id: query["user_id"] = user_id
     if status: query["status"] = status
 
-    result = await controller.search(query, page, limit)
+    result = await controller.search(query, page, limit, start_time, end_time)
     return result

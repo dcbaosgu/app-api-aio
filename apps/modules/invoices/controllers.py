@@ -22,6 +22,6 @@ class InvoiceController:
         result = await self.service.delete(_id)
         return result
 
-    async def search(self, query: dict, page: int, limit: int):
-        result = await self.service.search(query, page, limit)
+    async def search(self, query: dict, page: int, limit: int, start_time: str, end_time: str):
+        result = await self.service.search(query, page, limit, start_time, end_time)
         return result

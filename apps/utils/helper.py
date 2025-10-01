@@ -72,9 +72,9 @@ class Helper:
         return result.strftime(fmt)
 
     @staticmethod
-    def date_to_timestamp(date_str: str, fmt: str = "%d-%m-%Y %H:%M:%S", tz: str = "UTC") -> float:
+    def date_to_timestamp(dt: str, fmt: str = "%d-%m-%Y %H:%M:%S", tz: str = "UTC") -> float:
         # Convert date string "20-08-2025 22:59:16" to timestamp (e.g., 1755688756.0)
-        result = datetime.strptime(date_str, fmt)
+        result = datetime.strptime(dt, fmt)
         result = result.replace(tzinfo=ZoneInfo(tz))
         return result.timestamp()
     

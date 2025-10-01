@@ -8,7 +8,7 @@ class InvoiceUpdate(BaseModel):
     address: Optional[str] = None
     note: Optional[str] = None
     type_vat: Optional[Literal["company", "person", "b2b"]] = None
-    status: Optional[Literal["pending", "confirmed", "shipped", "delivered", "cancelled", "failed"]] = None
+    status: Optional[Literal["pending", "confirmed", "delivery", "finished", "cancelled"]] = None
 
 
 class InvoiceItem(BaseModel):

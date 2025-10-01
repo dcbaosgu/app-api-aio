@@ -1,6 +1,7 @@
 from apps.mongo.base import BaseCRUD
 from apps.mongo.engine import engine_aio
 from apps.utils.helper import Helper
+from datetime import datetime
 from .exception import ErrorCode
 from .schemas import InvoiceEmail, ItemEmail
 from apps.modules.redis.services import CartService
@@ -77,6 +78,19 @@ class InvoiceServices:
         result = await self.crud.delete_by_id(_id)
         return result
 
-    async def search(self, query: dict, page: int, limit: int):
+    async def search(self, query: dict, page: int, limit: int, start_time: str, end_time: str):
+
+        if start_time:
+            # Convert "03/10/2025" -> "03-10-2025 00:00:00"
+            start_time_format = datetime.strptime(start_time, "%d/%m/%Y").strftime("%d-%m-%Y 00:00:00")
+            query.setdefault("created_at", {})
+            query["created_at"]["$gte"] = Helper.date_to_timestamp(dt=start_time_format, tz="Asia/Ho_Chi_Minh")
+
+        if end_time:
+            # Convert "05/10/2025" -> "05-10-2025 23:59:59"
+            end_time_format = datetime.strptime(end_time, "%d/%m/%Y").strftime("%d-%m-%Y 23:59:59")
+            query.setdefault("created_at", {})
+            query["created_at"]["$lte"] = Helper.date_to_timestamp(dt=end_time_format, tz="Asia/Ho_Chi_Minh")
+
         result = await self.crud.search(query, page, limit)
         return result
