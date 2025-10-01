@@ -30,8 +30,8 @@ async def list_loggings(
     page: int = Query(1, gt=0, description="Page number"),
     limit: int = Query(10, le=100, description="Quantity items per page"),
     user_id: Optional[str] = Query(None, description="Filter User ID"),
-    start_time: Optional[str] = Query(None, description="Start day (Format: DD/MM/YYYY) - GMT+7)"),
-    end_time: Optional[str] = Query(None, description="End day (Format: DD/MM/YYYY) - GMT+7)")
+    start_time: Optional[str] = Query(None, description="Start time (Format: DD-MM-YYYY HH:MM:SS)-GMT+7"),
+    end_time: Optional[str] = Query(None, description="End time (Format: DD-MM-YYYY HH:MM:SS)-GMT+7)")
 ):
     query = {}
     if user_id: query["user_id"] = user_id

@@ -51,19 +51,17 @@ class HomeService:
             if not Validator.is_valid_date(start_time):
                 raise ErrorCode.InvalidDateFormat()
             
-            # Convert "03/10/2025" -> "03-10-2025 00:00:00"
-            start_time_format = datetime.strptime(start_time, "%d/%m/%Y").strftime("%d-%m-%Y 00:00:00")
+            start_timestamp = Helper.date_to_timestamp(dt=start_time, tz="Asia/Ho_Chi_Minh")
             query.setdefault("created_at", {})
-            query["created_at"]["$gte"] = Helper.date_to_timestamp(dt=start_time_format, tz="Asia/Ho_Chi_Minh")
+            query["created_at"]["$gte"] = start_timestamp
 
         if end_time:
             if not Validator.is_valid_date(end_time):
                 raise ErrorCode.InvalidDateFormat()
             
-            # Convert "05/10/2025" -> "05-10-2025 23:59:59"
-            end_time_format = datetime.strptime(end_time, "%d/%m/%Y").strftime("%d-%m-%Y 23:59:59")
+            end_timestamp = Helper.date_to_timestamp(dt=end_time, tz="Asia/Ho_Chi_Minh")
             query.setdefault("created_at", {})
-            query["created_at"]["$lte"] = Helper.date_to_timestamp(dt=end_time_format, tz="Asia/Ho_Chi_Minh")
+            query["created_at"]["$lte"] = end_timestamp
 
         result = await logging_crud.search(query, page, limit)
         return result

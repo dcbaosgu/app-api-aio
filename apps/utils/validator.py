@@ -32,7 +32,7 @@ class Validator:
         return True
     
     @staticmethod
-    def is_valid_date(date_str: str, fmt: str = "%d/%m/%Y") -> bool:
+    def is_valid_date(date_str: str, fmt: str = "%d-%m-%Y %H:%M:%S") -> bool:
         if not date_str: return False
         try:
             datetime.strptime(date_str, fmt)
