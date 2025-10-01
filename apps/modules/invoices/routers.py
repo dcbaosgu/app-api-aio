@@ -49,8 +49,8 @@ async def delete_invoice(invoice_id: str):
 })
 async def list_invoices(
     page: int = Query(1, gt=0, description="Page number"),
-    limit: int = Query(10, le=100, description="Item / page"),
-    user_id: Optional[str] = Query(None, description="Filter user"),
+    limit: int = Query(10, le=100, description="Quantity items per page"),
+    user_id: Optional[str] = Query(None, description="Filter User ID"),
     status: Optional[str] = Query(None, description="Status: pending /confirmed / delivery / finished/ cancelled"),
     start_time: Optional[str] = Query(None, description="Start day (Format: DD/MM/YYYY) - GMT+7)"),
     end_time: Optional[str] = Query(None, description="End day (Format: DD/MM/YYYY) - GMT+7)")

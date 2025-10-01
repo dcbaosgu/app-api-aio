@@ -61,3 +61,12 @@ class ErrorCode:
             title="Insufficient stock",
             detail=f"Product '{product_name}' quantity {inventory} not enough."
         )
+
+    @staticmethod
+    def InvalidDateFormat():
+        return StandardException(
+            type="validation/error/invalid-date-format",
+            status=status.HTTP_400_BAD_REQUEST,
+            title="Invalid date format",
+            detail=f"Field must follow format (e.g., 01/10/2025)."
+        )

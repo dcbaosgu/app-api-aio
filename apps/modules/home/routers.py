@@ -1,8 +1,10 @@
-from fastapi import APIRouter
+from typing import Optional
+from fastapi import APIRouter, Query
+from .exception import ErrorCode
 from .controllers import HomeController
 
 router = APIRouter(prefix="/v1/home", tags=["home"])
-home_controller = HomeController()
+controller = HomeController()
 
 
 @router.get("/ping", status_code=200, 
@@ -12,10 +14,27 @@ async def home():
     return result
 
 
-@router.get("/db/export", status_code=200, responses={
+@router.get("/db/backup", status_code=200, responses={
                 200: {"description": "Get items success"}})
-async def export_database():
+async def backup_db():
     try:
-        return await home_controller.export_db()
+        return await controller.backup_db()
     except Exception as e:
-        raise None
+        print("⚠️ Error backup data:", e)
+        raise ErrorCode.BackupDatabaseFailed()
+    
+
+@router.get("/log/tracking", status_code=200, responses={
+                200: {"description": "Get items success"}})
+async def list_loggings(
+    page: int = Query(1, gt=0, description="Page number"),
+    limit: int = Query(10, le=100, description="Quantity items per page"),
+    user_id: Optional[str] = Query(None, description="Filter User ID"),
+    start_time: Optional[str] = Query(None, description="Start day (Format: DD/MM/YYYY) - GMT+7)"),
+    end_time: Optional[str] = Query(None, description="End day (Format: DD/MM/YYYY) - GMT+7)")
+):
+    query = {}
+    if user_id: query["user_id"] = user_id
+    
+    result = await controller.search(query, page, limit, start_time, end_time)
+    return result

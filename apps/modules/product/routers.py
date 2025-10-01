@@ -49,11 +49,12 @@ async def list_products(
     if brand: query["brand"] = {"$regex": brand, "$options": "i"}
     if price_min is not None or price_max is not None:
         query["price"] = {k: v for k, v in (("$gte", price_min), ("$lte", price_max)) if v is not None}
+    """
     if series:
         series_list = [s.strip() for s in series.split(",") if s.strip()]
         if series_list:
             query["serial.number"] = {"$in": series_list}
-
+    """
     result = await controller.search(query, page, limit)
     return result
 

@@ -1,5 +1,6 @@
 import re
 from bson import ObjectId
+from datetime import datetime
 
 class Validator:
 
@@ -29,3 +30,12 @@ class Validator:
         if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
             return False
         return True
+    
+    @staticmethod
+    def is_valid_date(date_str: str, fmt: str = "%d/%m/%Y") -> bool:
+        if not date_str: return False
+        try:
+            datetime.strptime(date_str, fmt)
+            return True
+        except ValueError:
+            return False

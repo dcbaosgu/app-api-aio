@@ -40,7 +40,7 @@ async def delete_user(user_id: str):
 async def list_users(
     page: int = Query(1, gt=0),
     limit: int = Query(10, le=100),
-    search: Optional[str] = None,
+    search: Optional[str] = Query(None, description="Search by email or phone"),
 ):
     query = {}
     if search:

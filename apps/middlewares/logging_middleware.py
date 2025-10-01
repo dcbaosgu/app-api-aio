@@ -1,8 +1,8 @@
 from fastapi import Request, Response
+from apps.middlewares.logging_utils import *
 from starlette.middleware.base import BaseHTTPMiddleware
-from apps.middlewares.logging_utils import extract_user_id_from_request, get_request_data, get_response_data
-from apps.mongo.base import BaseCRUD
 from apps.mongo.engine import engine_logs
+from apps.mongo.base import BaseCRUD
 from apps.utils.helper import Helper
 
 logs_crud = BaseCRUD("loggings", engine_logs)
@@ -23,6 +23,7 @@ class LoggingMiddleware(BaseHTTPMiddleware):
         response: Response = await call_next(request)
         response_data = await get_response_data(response)
 
+        """ Write full logs no limit -> High memory
         log_entry = {
             "user_id": user_id,
             "request": request_data,
@@ -32,9 +33,30 @@ class LoggingMiddleware(BaseHTTPMiddleware):
             },
             "process_time": round((Helper.get_timestamp() - start_time) * 1000, 2),
         }
+        """
+        log_data = {
+            "user_id": user_id,
+            "request": {
+                "method": request_data.get("method"),
+                "url": request_data.get("url"),
+                "body": request_data.get("body"),
+            },
+            "response": {
+                "status_code": response.status_code,
+                "body": response_data,
+            },
+            "config": {
+                "client": request_data.get("client"),
+                "platform": request_data.get("headers", {}).get("sec-ch-ua-platform"),
+                "environment": request_data.get("headers", {}).get("user-agent"),
+                "browser": request_data.get("headers", {}).get("sec-ch-ua"),
+            },
+            "process_time": round((Helper.get_timestamp() - start_time) * 1000, 2),
+            "created_at": Helper.get_timestamp()
+        }
 
         try:
-            await logs_crud.create(log_entry)
+            await logs_crud.create(log_data)
         except Exception as e:
             print("⚠️ Error saving log:", e)
 
