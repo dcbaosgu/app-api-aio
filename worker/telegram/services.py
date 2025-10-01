@@ -71,7 +71,7 @@ class InvoiceBot(BaseBot):
             f"<b>User ID:</b> {invoice.get('user_id')}\n"
             f"<b>Status:</b> {invoice.get('status', '-')}\n"
             f"<b>Type VAT:</b> {invoice.get('type_vat', '-')}\n"
-            f"<b>Created At:</b> {Helper.timestamp_to_date(invoice.get('created_at'))}\n\n"
+            f"<b>Created At:</b> {Helper.timestamp_to_date(ts=invoice.get('created_at'), tz="Asia/Ho_Chi_Minh")}\n\n"
             f"<b>Items:</b>{items_text}\n\n"
             f"<b>Total Items:</b> {invoice.get('total_items', 0)}\n"
             f"<b>Total Price:</b> {invoice.get('total_price', 0.0)}\n"

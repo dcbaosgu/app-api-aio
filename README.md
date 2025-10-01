@@ -77,6 +77,9 @@ chmod +x ./bin/macos/dump_db.command (macos)
 # (start bot, add bot in channel (set admin) -> send channel -> get id)
 https://api.telegram.org/bot<BOT_TOKEN>/getUpdates
 
+# CALL WEBSOCET
+ws://localhost:8000/chat/ws/<channel_id>
+
 # RUN pytest in docker
 docker exec -it app-api-aio-api-1 \
 

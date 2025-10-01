@@ -19,7 +19,9 @@ class HomeController:
                 zipf.writestr(f"{collection_name}.bson", bson_bytes)
         zip_buffer.seek(0)
 
-        datetime = Helper.timestamp_to_date(Helper.get_timestamp())
+        timestamp = Helper.get_timestamp()
+        datetime = Helper.timestamp_to_date(ts=timestamp, fmt="%d-%m-%Y_%H_%M_%S", tz="Asia/Ho_Chi_Minh")
+        
         file_name = f"backup_{datetime}.zip"
         result = Response(
             content=zip_buffer.getvalue(),
