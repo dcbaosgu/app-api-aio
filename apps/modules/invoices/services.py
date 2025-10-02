@@ -2,7 +2,6 @@ from apps.mongo.base import BaseCRUD
 from apps.mongo.engine import engine_aio
 from apps.utils.helper import Helper
 from apps.utils.validator import Validator
-from datetime import datetime
 from .exception import ErrorCode
 from .schemas import InvoiceEmail, ItemEmail
 from apps.modules.redis.services import CartService
