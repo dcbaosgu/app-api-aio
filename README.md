@@ -40,7 +40,8 @@ pip freeze > requirements.txt
 pip freeze | ForEach-Object { pip uninstall -y $_ }
 
 # DELETE CACHE DOCKER
-docker stop $(docker ps -q) 2>/dev/null
+docker stop $(docker ps -q) 2>/dev/null (linux)
+docker ps -q | ForEach-Object { docker stop $_ } (windows)
 docker system prune -a --volumes --force && docker builder prune -a --force
 
 # DOCKER BUILT AND START
