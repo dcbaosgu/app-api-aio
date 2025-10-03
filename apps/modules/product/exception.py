@@ -15,7 +15,7 @@ class ErrorCode:
             type="products/error/invalid-id",
             status=status.HTTP_404_NOT_FOUND,
             title="Product not found",
-            detail="The product ID provided does not exist in the system."
+            detail="Product ID provided does not exist in the system."
         )
     
     """

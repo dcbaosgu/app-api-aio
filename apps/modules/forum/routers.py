@@ -3,7 +3,7 @@ from fastapi import APIRouter, Query
 from . import schemas
 from .controllers import ThreadController, PostController
 
-router = APIRouter(prefix="/v1/forum", tags=["forum"])
+router = APIRouter(prefix="/v1/forum", tags=["Forum"])
 
 thread_controller = ThreadController()
 post_controller = PostController()

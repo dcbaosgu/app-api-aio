@@ -4,7 +4,7 @@ let fileManager = FileManager.default
 
 let baseDir = fileManager.currentDirectoryPath
 let inputFolder = "\(baseDir)/assets/video"
-let outputFolder = "\(baseDir)/assets/media"
+let outputFolder = "\(baseDir)/assets/stream"
 
 try? fileManager.createDirectory(atPath: outputFolder, withIntermediateDirectories: true)
 

@@ -14,7 +14,7 @@ class ErrorCode:
             type="ai/error/gemini-failed",
             status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             title="Gemini Service Error",
-            detail=message or "An unexpected error occurred while calling Gemini."
+            detail=message or "An error occurred while calling Gemini."
         )
 
     @staticmethod
@@ -23,5 +23,14 @@ class ErrorCode:
             type="ai/error/openai-failed",
             status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             title="OpenAI Service Error",
-            detail=message or "An unexpected error occurred while calling OpenAI."
+            detail=message or "An error occurred while calling OpenAI."
+        )
+
+    @staticmethod
+    def ClaudeError(message: str = ""):
+        return StandardException(
+            type="ai/error/claude-failed",
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            title="ClaudeAI Service Error",
+            detail=message or "An error occurred while calling CladeAI."
         )

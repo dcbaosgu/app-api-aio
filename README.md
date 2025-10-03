@@ -84,7 +84,7 @@
     .\bin\windows\dump_db.ps1
     ./bin/linux/dump_db.sh
   ```
-4. Convert HTTP Live Streaming
+5. Convert HTTP Live Streaming
   -Ensure video exists in mp4 and mov format
    ```shell
     python3 apple_hls.py
@@ -92,7 +92,7 @@
     ./bin/linux/apple_hls.sh
   ```
 
-5. Run APP
+6. Run APP
   ```shell
     http://localhost:8000/docs/
     http://localhost:8000/redoc/

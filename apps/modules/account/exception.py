@@ -22,7 +22,7 @@ class ErrorCode:
             type="auth/error/email-not-found",
             status=status.HTTP_404_NOT_FOUND,
             title="Email not Found",
-            detail="Email does not exist"
+            detail="Email does not exist in user"
         )
     
     @staticmethod
@@ -40,7 +40,7 @@ class ErrorCode:
             type="auth/error/otp-not-found",
             status=status.HTTP_404_NOT_FOUND,
             title="OTP not Found",
-            detail="OTP does not exist"
+            detail="OTP does not exist in user"
         )
     
     def ExpiredOTP():

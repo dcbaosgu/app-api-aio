@@ -4,7 +4,7 @@ from .controllers import AccountController
 from apps.auth.depends import require_permission
 
 
-router = APIRouter(prefix="/v1/account", tags=["accounts"])
+router = APIRouter(prefix="/v1/account", tags=["Accounts"])
 controller = AccountController()
 
 

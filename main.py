@@ -15,7 +15,7 @@ app = FastAPI(
     description="RestfulAPI backend with JWT authentication",
 )
 
-# ✅ Swagger JWT config
+# ⚙️ Swagger JWT config
 def custom_openapi():
     if app.openapi_schema: return app.openapi_schema
 
@@ -33,7 +33,7 @@ def custom_openapi():
     }
     openapi_schema["info"]["termsOfService"] = "https://github.com/canon-d2"
 
-    # 🔹 Config security scheme for JWT
+    # 🚀 Config security scheme for JWT
     openapi_schema["components"]["securitySchemes"] = {
         "BearerAuth": {
             "type": "http",

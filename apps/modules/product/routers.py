@@ -3,7 +3,7 @@ from . import schemas
 from typing import Optional
 from .controllers import ProductController
 
-router = APIRouter(prefix="/v1/product", tags=["product"])
+router = APIRouter(prefix="/v1/product", tags=["Product"])
 controller = ProductController()
 
 

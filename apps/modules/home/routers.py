@@ -3,7 +3,7 @@ from fastapi import APIRouter, Query
 from .exception import ErrorCode
 from .controllers import HomeController
 
-router = APIRouter(prefix="/v1/home", tags=["home"])
+router = APIRouter(prefix="/v1/home", tags=["Home"])
 controller = HomeController()
 
 

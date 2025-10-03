@@ -14,7 +14,7 @@ class ErrorCode:
             type="fes/error/event-not-found",
             status=status.HTTP_404_NOT_FOUND,
             title="Event not found",
-            detail="The event ID provided does not exist."
+            detail="Event ID provided does not exist."
         )
 
     @staticmethod
@@ -41,5 +41,5 @@ class ErrorCode:
             type="users/error/invalid-id",
             status=status.HTTP_404_NOT_FOUND,
             title="Staff not found",
-            detail="The user ID provided does not exist in the system."
+            detail="User ID provided does not exist in the system."
         )

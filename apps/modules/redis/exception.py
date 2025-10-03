@@ -32,7 +32,7 @@ class ErrorCode:
             type="data/error/invalid-id",
             status=status.HTTP_404_NOT_FOUND,
             title="User & Product not found",
-            detail="The user ID or Product ID provided does not exist in the system."
+            detail="User ID or Product ID provided does not exist in the system."
         )
     
     @staticmethod

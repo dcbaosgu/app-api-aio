@@ -4,7 +4,7 @@ from .controllers import CronController
 from typing import Optional
 
 
-router = APIRouter(prefix="/v1/cronjob", tags=["cronjob"])
+router = APIRouter(prefix="/v1/cronjob", tags=["Cronjob"])
 controller = CronController()
 
 

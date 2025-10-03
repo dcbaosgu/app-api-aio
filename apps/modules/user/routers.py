@@ -3,7 +3,7 @@ from . import schemas
 from .controllers import UserController
 from typing import Optional
 
-router = APIRouter(prefix="/v1/user", tags=["user"])
+router = APIRouter(prefix="/v1/user", tags=["User"])
 controller = UserController()
 
 

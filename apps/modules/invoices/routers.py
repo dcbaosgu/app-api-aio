@@ -4,7 +4,7 @@ from . import schemas
 from .controllers import InvoiceController
 from .exception import ErrorCode
 
-router = APIRouter(prefix="/v1/invoice", tags=["invoice"])
+router = APIRouter(prefix="/v1/invoice", tags=["Invoice"])
 controller = InvoiceController()
 
 

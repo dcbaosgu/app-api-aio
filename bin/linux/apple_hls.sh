@@ -3,7 +3,7 @@
 base_dir=$(pwd)
 
 input_folder="$base_dir/assets/video"
-output_folder="$base_dir/assets/media"
+output_folder="$base_dir/assets/stream"
 
 mkdir -p "$output_folder"
 

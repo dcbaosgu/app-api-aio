@@ -3,7 +3,7 @@ from fastapi import APIRouter
 from .controllers import CartController
 
 
-router = APIRouter(prefix="/v1/cart", tags=["redis-cart"])
+router = APIRouter(prefix="/v1/cart", tags=["Redis-Cart"])
 controller = CartController()
 
 

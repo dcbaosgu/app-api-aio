@@ -4,7 +4,7 @@ from . import schemas
 
 from worker.sentry.controllers import SentryController
 
-router = APIRouter(prefix="/v1/sentry", tags=["sentry"])
+router = APIRouter(prefix="/v1/sentry", tags=["Sentry"])
 sentry_controller = SentryController()
 
 

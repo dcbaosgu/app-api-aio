@@ -2,7 +2,7 @@ from fastapi import APIRouter, WebSocket
 from .controllers import SocketController
 from . import schemas
 
-router = APIRouter(prefix="/socket", tags=["socket"])
+router = APIRouter(prefix="/socket", tags=["Socket"])
 controller = SocketController()
 
 

@@ -3,7 +3,7 @@ from fastapi import APIRouter, Query
 from .controllers import EventController, TicketController
 from . import schemas
 
-router = APIRouter(prefix="/v1/festival", tags=["festival"])
+router = APIRouter(prefix="/v1/festival", tags=["Festival"])
 
 event_controller = EventController()
 ticket_controller = TicketController()

@@ -13,3 +13,8 @@ class OpenAIRequest(BaseModel):
 
 class Response(BaseModel):
     generate: str
+    
+class ClaudeRequest(BaseModel):
+    prompt: Optional[str] = None
+    content: str
+    model: str = Field(default="claude-3-5-sonnet-latest")

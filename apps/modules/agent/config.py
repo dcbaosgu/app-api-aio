@@ -4,6 +4,7 @@ class Settings(BaseSettings):
     OPENAI_API_KEY: str
     GEMINI_API_KEY: str
     GEMINI_BASE_URL: str
+    CLAUDE_API_KEY: str
 
     class Config:
         env_file = "env/app.env"
@@ -14,3 +15,4 @@ settings : Settings = Settings()
 OPENAI_API_KEY = settings.OPENAI_API_KEY
 GEMINI_API_KEY = settings.GEMINI_API_KEY
 GEMINI_BASE_URL = settings.GEMINI_BASE_URL
+CLAUDE_API_KEY = settings.CLAUDE_API_KEY

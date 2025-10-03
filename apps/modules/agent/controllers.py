@@ -1,4 +1,4 @@
-from .services import gemini_services, openai_services
+from .services import gemini_services, openai_services, claude_services
 from .exception import ErrorCode
 
 
@@ -22,3 +22,14 @@ class OpenAIController:
             return await self.service.generate(content, model, prompt)
         except Exception as e:
             raise ErrorCode.OpenAIError(str(e))
+
+
+class ClaudeController:
+    def __init__(self):
+        self.service = claude_services
+
+    async def generate(self, content: str, model: str, prompt: None):
+        try:
+            return await self.service.generate(content, model, prompt)
+        except Exception as e:
+            raise ErrorCode.ClaudeError(str(e))

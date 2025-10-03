@@ -23,5 +23,5 @@ class ErrorCode:
             type="users/error/invalid-id",
             status=status.HTTP_404_NOT_FOUND,
             title="User not found",
-            detail="The user ID provided does not exist in the system."
+            detail="User ID provided does not exist in the system."
         )

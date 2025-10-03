@@ -9,7 +9,7 @@ func main() {
 	}
 
 	inputFolder := filepath.Join(baseDir, "assets", "video")
-	outputFolder := filepath.Join(baseDir, "assets", "media")
+	outputFolder := filepath.Join(baseDir, "assets", "stream")
 
 	// Create the original output directory if it does not exist
 	if err := os.MkdirAll(outputFolder, 0755); err != nil {

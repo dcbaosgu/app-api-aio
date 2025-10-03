@@ -8,7 +8,7 @@ from apscheduler.triggers.cron import CronTrigger
 from apscheduler.jobstores.base import JobLookupError
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
-cron_crud = BaseCRUD("cronjobs", engine_aio)
+cron_crud = BaseCRUD("cron-jobs", engine_aio)
 
 class CronsJob:
     def __init__(self, scheduler: AsyncIOScheduler):

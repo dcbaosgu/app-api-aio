@@ -13,6 +13,7 @@ from apps.modules.taxcode.routers import router as taxcode_router
 from apps.modules.socket.routers import router as socket_router
 from apps.modules.cronjob.routers import router as cron_router
 from apps.modules.redis.routers import router as redis_router
+from apps.modules.stream.routers import router as stream_router
 from worker.sentry.routers import router as sentry_router
 
 api_router = APIRouter()
@@ -29,5 +30,6 @@ api_router.include_router(festival_router)
 api_router.include_router(taxcode_router)
 api_router.include_router(socket_router)
 api_router.include_router(cron_router)
-api_router.include_router(sentry_router)
 api_router.include_router(redis_router)
+api_router.include_router(stream_router)
+api_router.include_router(sentry_router)
