@@ -7,12 +7,10 @@ class AppSheetService:
         self.url = URL_APPSHEET
         
     async def send_report(self, data: dict) -> dict:
-        print("data >>", data)
         if "create_time" in data and data["create_time"]:
             data["create_time"] = Helper.timestamp_to_date(ts=data["create_time"], tz="Asia/Ho_Chi_Minh")
         try:
             response = requests.post(self.url, json=data, timeout=10)
-            print("response >>", response)
             response.raise_for_status()
             return response.json()
         except Exception as e:

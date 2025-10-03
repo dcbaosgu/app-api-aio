@@ -3,8 +3,8 @@ import Foundation
 let fileManager = FileManager.default
 
 let baseDir = fileManager.currentDirectoryPath
-let inputFolder = "\(baseDir)/assets/videos"
-let outputFolder = "\(baseDir)/assets/streams"
+let inputFolder = "\(baseDir)/assets/video"
+let outputFolder = "\(baseDir)/assets/media"
 
 try? fileManager.createDirectory(atPath: outputFolder, withIntermediateDirectories: true)
 

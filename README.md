@@ -32,69 +32,71 @@
   </a>
 </p>
 
-### ⚠️Notice: Everything is packaged and versioned in Docker.
-## 🛠️ Notes Installation & Fix bug
+### ⚠️Notice: Build and run the web server in Docker then load the backup dataset using scripts on any operating system
 
-# EXPORT REQUIMENT & DELETE ALL LIBRARY
-pip freeze > requirements.txt
-pip freeze | ForEach-Object { pip uninstall -y $_ }
+## 🛠️ Installation Steps
 
-# DELETE CACHE DOCKER
-docker stop $(docker ps -q) 2>/dev/null (linux)
-docker ps -q | ForEach-Object { docker stop $_ } (windows)
-docker system prune -a --volumes --force && docker builder prune -a --force
+### 🌐 Project NextJS
+1. Git clone the Project: 
+   ```shell
+    git clone https://github.com/Canon-D2/app-gui-aio
+    ```
+2. If Bun and NodeJS is not in your system
+   - [Install NodeJS V22.20.0](https://nodejs.org/en/download)
+   - [Install Bun V1.2.32](https://bun.com/docs/installation)
 
-# DOCKER BUILT AND START
-cd ./project_name
-docker-compose build
-docker-compose up --no-log-prefix
+3. If you get an error when building, delete the old bun.lock and node modules.
+4. Build dependencies
+  ```shell
+    bun install
+  ```
+5. Run the application
+  ```shell
+    bun run dev
+  ```
+5. Access host
+  ```shell
+    http://localhost:3000/
+  ```
 
-# ACCESS FOLDER DOCKER
-docker exec -it app-api-aio-api-1 /bin/sh
-cd /opt/python-projects/apps/
+### 📱 Project RestfulAPI
+1. If Docker and other ingredients is not in your system
+   - [Install Docker Engine](https://docs.docker.com/engine/install/ubuntu/)
+   - [Install Redis Insign](https://redis.io/docs/latest/operate/redisinsight/install/)
+   - [Install Mongo Compass](https://www.mongodb.com/try/download/compass)
 
-# EX:FFMPEG CHUNK VIDEO
-# (access folder docker)
-ffmpeg -version
-chmod +x bin/linux/apple_hls.sh
-./bin/linux/apple_hls.sh
+2. Git clone the Project:
+  ```shell
+    git clone https://github.com/Canon-D2/app-api-aio
+  ```
+3. Building Applications on Docker
+  - Add env file containing environment variables to project
 
-# CHECK VERSION SERVICES
-docker exec -it app-api-aio-mgdb-1 mongod --version
-docker exec -it nginx nginx -v
-docker exec -it app-api-aio-rabbitmq-1 rabbitmqctl version
+  - Building and Running services
+  ```shell
+    docker-compose build
+    docker-compose up
+  ```
 
-# RABBITMQ NOT WORKING -> STOP -> START AGAIN
-rabbitmq-plugins enable rabbitmq_management
-net stop RabbitMQ && net start RabbitMQ
+4. Dump database
+  - Put files containing data in backup folder
+   ```shell
+    .\bin\windows\dump_db.ps1
+    ./bin/linux/dump_db.sh
+  ```
+4. Convert HTTP Live Streaming
+  -Ensure video exists in mp4 and mov format
+   ```shell
+    python3 apple_hls.py
+    swift apple_hls.swift
+    ./bin/linux/apple_hls.sh
+  ```
 
-# URL REDIS INSIGHT CONNECT
-redis://:APP-API-AIO@127.0.0.1:6379/0
-
-# RUN DATA BACKUP
-.\bin\windows\dump_db.ps1 (windows)
-
-chmod +x /bin/linux/dump_db.sh (linux)
-./bin/linux/dump_db.sh
-
-chmod +x ./bin/macos/dump_db.command (macos)      
-./bin/linux/dump_db.sh
-
-# CREATE CHANNEL AND GET ID
-# (start bot, add bot in channel (set admin) -> send channel -> get id)
-https://api.telegram.org/bot<BOT_TOKEN>/getUpdates
-
-# CALL WEBSOCET
-ws://localhost:8000/chat/ws/<channel_id>
-
-# RUN pytest in docker
-docker exec -it app-api-aio-api-1 \
-
-sh -c "PYTHONPATH=/opt/python-projects/apps pytest -p no:warnings /opt/python-projects/apps/test/test_ping.py"
-
-# SSH SERVER AWS
-icacls .\ec2.pem /inheritance:r
-icacls .\ec2.pem /grant:r "$($env:USERNAME):(R)"
-chmod 400 ~/Desktop/ec2.pem (if linux)
-icacls .\ec2.pem
-ssh -i .\ec2.pem ubuntu@<PUBLIC_IP>
+5. Run APP
+  ```shell
+    http://localhost:8000/docs/
+    http://localhost:8000/redoc/
+  ```
+   
+-----------------------------------------------------------------------------------------------
+<p align="center"> Thanks for reading me ❤️ </p>

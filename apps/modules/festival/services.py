@@ -7,7 +7,6 @@ from .exception import ErrorCode
 event_crud = BaseCRUD("fes-events", engine_aio)
 ticket_crud = BaseCRUD("fes-tickets", engine_aio)
 
-
 class EventServices:
     def __init__(self, event_crud: BaseCRUD):
         self.event_crud = event_crud

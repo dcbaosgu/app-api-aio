@@ -3,8 +3,7 @@ from .services import user_crud, UserServices
 
 class UserController:
     def __init__(self):
-        self.crud = user_crud
-        self.service = UserServices(self.crud)
+        self.service = UserServices(user_crud)
 
     async def create(self, data):
         result = await self.service.create(data)

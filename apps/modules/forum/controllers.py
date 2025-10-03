@@ -1,11 +1,9 @@
-from typing import Any, Dict
 from .services import thread_crud, post_crud, ThreadServices, PostServices
 
 
 class ThreadController:
     def __init__(self):
-        self.crud = thread_crud
-        self.service = ThreadServices(self.crud)
+        self.service = ThreadServices(thread_crud)
 
     async def create(self, data): 
         result = await self.service.create(data)
@@ -53,6 +51,6 @@ class PostController:
         result = await self.service.search(query, page, limit)
         return result
 
-    async def reaction(self, post_id: str, reaction: str, user_id: str) -> Dict[str, Any]:
+    async def reaction(self, post_id: str, reaction: str, user_id: str):
         result = await self.service.reaction(post_id, reaction, user_id)
         return result

@@ -1,8 +1,7 @@
-from typing import Any, Dict
 from apps.mongo.base import BaseCRUD
 from apps.mongo.engine import engine_aio
-from .exception import ErrorCode
 from apps.modules.user.services import user_crud
+from .exception import ErrorCode
 
 thread_crud = BaseCRUD("forum-threads", engine_aio)
 post_crud = BaseCRUD("forum-posts", engine_aio)
@@ -91,7 +90,7 @@ class PostServices:
         result = await self.post_crud.search(query, page, limit)
         return result
 
-    async def reaction(self, post_id: str, reaction: str, user_id: str) -> Dict[str, Any]:
+    async def reaction(self, post_id: str, reaction: str, user_id: str):
         post = await self.post_crud.get_by_id(post_id)
         if not post:
             raise ErrorCode.PostNotFound()
@@ -106,10 +105,10 @@ class PostServices:
             reactions[reaction].remove(user_id)
             
             # Delete Reaction empty
-            # if not reactions[reaction]:
-                # del reactions[reaction]
+            if not reactions[reaction]:
+                del reactions[reaction]
         else:
-            # Delete reaction old and add reaction new
+            # Delete reaction old & add reaction new
             for rtype, users in reactions.items():
                 if user_id in users:
                     reactions[rtype].remove(user_id)

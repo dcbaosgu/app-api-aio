@@ -20,7 +20,7 @@ async def backup_db():
     try:
         return await controller.backup_db()
     except Exception as e:
-        print("⚠️ Error backup data:", e)
+        print("[HOME] Error backup data:", e)
         raise ErrorCode.BackupDatabaseFailed()
     
 

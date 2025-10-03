@@ -6,9 +6,9 @@ from apps.utils.helper import Helper
 class BaseBot:
     def __init__(self, channel_id: str):
         self.bot = AsyncTeleBot(BOT_TOKEN)
+        self.text_mode = "HTML"
         self.environment = ENVIRONMENT
         self.channel_id = channel_id
-        self.text_mode = "HTML"
 
     async def send_message(self, message: str):
         # Only send when Environment is Dev

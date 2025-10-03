@@ -4,8 +4,7 @@ from .schemas import LoginRequest, GetOTPRequest, ForgotPasswordRequest
 
 class AccountController:
     def __init__(self):
-        self.crud = account_crud
-        self.service = AccountService(self.crud)
+        self.service = AccountService(account_crud)
 
     async def login(self, data: LoginRequest):
         result = await self.service.login(data)

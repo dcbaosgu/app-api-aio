@@ -1,7 +1,7 @@
 from typing import Optional
 from fastapi import APIRouter, Query
-from . import schemas
 from .controllers import EventController, TicketController
+from . import schemas
 
 router = APIRouter(prefix="/v1/festival", tags=["festival"])
 
@@ -91,6 +91,7 @@ async def list_ticket(
 
     result = await ticket_controller.search(query, page, limit)
     return result
+
 
 @router.get("/ticket/qr/{ticket_id}", status_code=200, responses={
                 200: {"description": "Get items success"}})

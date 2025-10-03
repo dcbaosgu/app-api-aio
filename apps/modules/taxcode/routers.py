@@ -2,7 +2,7 @@ from fastapi import APIRouter, Path
 from . import schemas
 from .controllers import TaxController
 
-router = APIRouter(prefix="/v1/tax", tags=["tax"])
+router = APIRouter(prefix="/v1/tax", tags=["Tax-code"])
 controller = TaxController()
 
 

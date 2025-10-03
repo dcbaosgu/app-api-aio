@@ -2,8 +2,7 @@ from .services import product_crud, ProductServices
 
 class ProductController:
     def __init__(self):
-        self.crud = product_crud
-        self.service = ProductServices(self.crud)
+        self.service = ProductServices(product_crud)
 
     async def create(self, data):
         result = await self.service.create(data)

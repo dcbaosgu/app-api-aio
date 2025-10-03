@@ -1,11 +1,11 @@
 from fastapi import WebSocket, WebSocketDisconnect
+from .services import SocketServices, channels_crud, messages_crud
 from . import schemas
-from .services import socket_service
 from worker.kafka.services import kafka_service
 
-class ChatController:
+class SocketController:
     def __init__(self):
-        self.service = socket_service
+        self.service = SocketServices(channels_crud, messages_crud)
 
     async def chat_realtime(self, channel_id: str, websocket: WebSocket):
 
@@ -28,3 +28,7 @@ class ChatController:
 
         finally: # Clear memory socket connecting
             self.service.disconnect(channel_id, websocket)
+
+    async def create(self, data):
+        result = await self.service.create(data)
+        return result

@@ -1,8 +1,8 @@
-from .services import HomeService
+from .services import HomeService, logging_crud
 
 class HomeController:
     def __init__(self):
-        self.service = HomeService()
+        self.service = HomeService(logging_crud)
 
     async def backup_db(self):
         result = await self.service.backup_db()

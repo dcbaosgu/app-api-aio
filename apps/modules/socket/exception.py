@@ -25,3 +25,21 @@ class ErrorCode:
             title="Channel not found",
             detail="The specified chat channel does not exist."
         )
+    
+    @staticmethod
+    def InvalidMembers():
+        return StandardException(
+            type="channel/invalid-members",
+            status=status.HTTP_400_BAD_REQUEST,
+            title="Invalid members",
+            detail="A chat channel must contain at least 2 members."
+        )
+
+    @staticmethod
+    def ChannelExist():
+        return StandardException(
+            type="channel/already-exists",
+            status=status.HTTP_409_CONFLICT,
+            title="Channel already exists",
+            detail="A chat channel with the same members already exists."
+        )

@@ -3,8 +3,7 @@ from .services import invoice_crud, InvoiceServices
 
 class InvoiceController:
     def __init__(self):
-        self.crud = invoice_crud
-        self.service = InvoiceServices(self.crud)
+        self.service = InvoiceServices(invoice_crud)
 
     async def checkout_cart(self, user_id: str):
         result = await self.service.checkout_cart(user_id)

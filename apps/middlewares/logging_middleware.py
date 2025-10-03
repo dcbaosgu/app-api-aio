@@ -7,7 +7,6 @@ from apps.utils.helper import Helper
 
 logs_crud = BaseCRUD("loggings", engine_logs)
 
-
 class LoggingMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         start_time = Helper.get_timestamp()
@@ -58,6 +57,6 @@ class LoggingMiddleware(BaseHTTPMiddleware):
         try:
             await logs_crud.create(log_data)
         except Exception as e:
-            print("⚠️ Error saving log:", e)
+            print("[LOGGING] Error saving log:", e)
 
         return response

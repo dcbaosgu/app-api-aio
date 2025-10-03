@@ -1,7 +1,7 @@
 from fastapi import Request
 from apps.utils.helper import Helper
 
-# Async generator để đọc lại response
+# Async generator to reread the response
 async def iterate_in_chunks(data: bytes, chunk_size: int = 4096):
     for i in range(0, len(data), chunk_size):
         yield data[i : i + chunk_size]

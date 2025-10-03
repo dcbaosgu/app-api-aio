@@ -3,41 +3,40 @@ from apps.mongo.base import BaseCRUD
 from apps.mongo.engine import engine_aio
 from .exception import ErrorCode
 
-
 product_crud = BaseCRUD("products", engine_aio)
 
 class ProductServices:
-    def __init__(self, crud: BaseCRUD):
-        self.crud = crud
+    def __init__(self, product_crud: BaseCRUD):
+        self.product_crud = product_crud
     
     async def create(self, data: dict):
         data["sku"] = Helper.convert_slug(data["name"])
-        result = await self.crud.create(data)
+        result = await self.product_crud.create(data)
         return result
 
     async def update(self, _id, data):
-        result = await self.crud.update_by_id(_id, data)
+        result = await self.product_crud.update_by_id(_id, data)
         if not result:
             raise ErrorCode.InvalidProductId()
         return result
 
     async def get(self, _id):
-        result = await self.crud.get_by_id(_id)
+        result = await self.product_crud.get_by_id(_id)
         if not result:
             raise ErrorCode.InvalidProductId()
         return result
 
     async def delete(self, _id):
-        result = await self.crud.delete_by_id(_id)
+        result = await self.product_crud.delete_by_id(_id)
         return result
 
     async def search(self, query: dict, page: int, limit: int):
-        result = await self.crud.search(query, page, limit)
+        result = await self.product_crud.search(query, page, limit)
         return result
 
     """
     async def add_serial(self, product_id: str, number: str, status: str):
-        product = await self.crud.get_by_id(product_id)
+        product = await self.product_crud.get_by_id(product_id)
         if not product:
             raise ErrorCode.InvalidProductId()
         
@@ -46,12 +45,12 @@ class ProductServices:
                 raise ErrorCode.SerialAlreadyExists()
 
         payload = {"$push": {"serial": {"number": number, "status": status}}}
-        await self.crud.update_one_nomit({"_id": product_id}, payload)
+        await self.product_crud.update_one_nomit({"_id": product_id}, payload)
         return {"status": "success", "message": f"Serial {number} added successfully"}
 
 
     async def update_serial(self, product_id: str, number_old: str, number_new: str, status_new: str):
-        product = await self.crud.get_by_id(product_id)
+        product = await self.product_crud.get_by_id(product_id)
         if not product:
             raise ErrorCode.InvalidProductId()
         
@@ -70,12 +69,12 @@ class ProductServices:
             }
         }
         array_filters = [{"elem.number": number_old}]
-        await self.crud.update_one_nomit({"_id": product_id}, payload, array_filters=array_filters)
+        await self.product_crud.update_one_nomit({"_id": product_id}, payload, array_filters=array_filters)
         return {"status": "success", "message": f"Serial {number_old} updated to {number_new}"}
 
 
     async def delete_serial(self, product_id: str, number: str):
-        product = await self.crud.get_by_id(product_id)
+        product = await self.product_crud.get_by_id(product_id)
         if not product:
             raise ErrorCode.InvalidProductId()
         
@@ -88,6 +87,6 @@ class ProductServices:
             raise ErrorCode.SerialNotFound()
 
         payload = {"$pull": {"serial": {"number": number}}}
-        await self.crud.update_one_nomit({"_id": product_id}, payload)
+        await self.product_crud.update_one_nomit({"_id": product_id}, payload)
         return {"status": "success", "message": f"Serial {number} deleted successfully"}
     """

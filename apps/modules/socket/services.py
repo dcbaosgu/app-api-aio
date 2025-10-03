@@ -8,8 +8,7 @@ from .exception import ErrorCode
 channels_crud = BaseCRUD("chat-channels", engine_aio)
 messages_crud = BaseCRUD("chat-messages", engine_aio)
 
-
-class ChatServices:
+class SocketServices:
     def __init__(self, channels_crud: BaseCRUD, messages_crud: BaseCRUD):
         self.channels_crud = channels_crud
         self.messages_crud = messages_crud
@@ -76,4 +75,22 @@ class ChatServices:
         return chat_message.dict()
 
 
-socket_service = ChatServices(channels_crud, messages_crud)
+    async def create(self, data: dict):
+        members = data.get("members", [])
+        if not members or len(members) < 2:
+            raise ErrorCode.InvalidMembers()
+        
+        query = {
+            "members": {"$all": members},
+            "members": {"$size": len(members)}
+        }
+        list_channel = await self.channels_crud.search(page=1, limit=10000, query=query)
+
+        for channel in list_channel["results"]:
+            if set(channel["members"]) == set(members):
+                raise ErrorCode.ChannelExist()
+
+        result = await self.channels_crud.create(data)
+        return result
+
+socket_service = SocketServices(channels_crud, messages_crud)

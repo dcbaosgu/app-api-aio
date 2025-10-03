@@ -1,18 +1,19 @@
 import pytz, httpx
 from datetime import datetime
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from apscheduler.triggers.cron import CronTrigger
-from apscheduler.jobstores.base import JobLookupError
-
 from apps.mongo.base import BaseCRUD
 from apps.mongo.engine import engine_aio
 from .exception import ErrorCode
+
+from apscheduler.triggers.cron import CronTrigger
+from apscheduler.jobstores.base import JobLookupError
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 cron_crud = BaseCRUD("cronjobs", engine_aio)
 
 class CronsJob:
     def __init__(self, scheduler: AsyncIOScheduler):
         self.scheduler = scheduler
+        self.cron_crud = cron_crud
         self.timezone_vn = pytz.timezone("Asia/Ho_Chi_Minh")
 
     async def add_cron(self, cron: dict):
@@ -50,7 +51,7 @@ class CronsJob:
             print(f"[CRON][ERROR] Failed to delete job {cron_id}: {e}")
 
     async def execute_job(self, cron_id: str):
-        cron = await cron_crud.get_by_id(cron_id)
+        cron = await self.cron_crud.get_by_id(cron_id)
         if not cron:
             print(f"[CRON][WARN] Job not found in DB: {cron_id}")
             return
@@ -86,13 +87,13 @@ class CronsJob:
             except Exception:
                 data = response.text
 
-            await cron_crud.update_by_id(cron_id, {"response": data})
+            await self.cron_crud.update_by_id(cron_id, {"response": data})
 
         except Exception as e:
             print(f"[CRON][ERROR] Exception while executing job {cron_id}: {e}")
 
     async def add_all_crons(self):
-        crons = await cron_crud.search({}, page=1, limit=500)
+        crons = await self.cron_crud.search({}, page=1, limit=100)
         for cron in crons["results"]:
             if cron.get("enable", True):
                 await self.add_cron(cron)

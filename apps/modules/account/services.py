@@ -6,18 +6,16 @@ from .schemas import LoginRequest, ForgotPasswordRequest
 from apps.utils.helper import Helper
 from .exception import ErrorCode
 
-
 account_crud = BaseCRUD("users", engine_aio)
 
-
 class AccountService:
-    def __init__(self, crud: BaseCRUD):
-        self.crud = crud
+    def __init__(self, account_crud: BaseCRUD):
+        self.account_crud = account_crud
         self.rabbitmq_service = RabbitMQServices()
 
     async def login(self, data: LoginRequest):
         email = data.email
-        user = await self.crud.get_one_query({"email": email})
+        user = await self.account_crud.get_one_query({"email": email})
         if not user:
             raise ErrorCode.InvalidLogin()
 
@@ -35,14 +33,14 @@ class AccountService:
         return {"token_type": "bearer", "access_token": token}
 
     async def get_otp(self, email: str):
-        user = await self.crud.get_one_query({"email": email})
+        user = await self.account_crud.get_one_query({"email": email})
         if not user: 
             raise ErrorCode.EmailNotFound()
 
         otp_code = Helper.generate_secret_otp()
         expire_otp = Helper.get_timestamp() + 15 * 60
 
-        await self.crud.update_by_id(_id=user["_id"], data={"otp_code": otp_code, "expire_otp": expire_otp})
+        await self.account_crud.update_by_id(_id=user["_id"], data={"otp_code": otp_code, "expire_otp": expire_otp})
 
         await self.rabbitmq_service.producer(
             email=user["email"],
@@ -57,11 +55,11 @@ class AccountService:
         query = {"expire_otp": {"$lt": now}} # otp has expired
         data = {"$unset": {"expire_otp": "", "otp_code": ""}}
         
-        result = await self.crud.update_many_nomit(query, data)
+        result = await self.account_crud.update_many_nomit(query, data)
         return result
     
     async def forgot_password(self, data: ForgotPasswordRequest):
-        user = await self.crud.get_one_query({"email": data.email})
+        user = await self.account_crud.get_one_query({"email": data.email})
         if not user:
             raise ErrorCode.EmailNotFound()
         
@@ -76,7 +74,7 @@ class AccountService:
         
         hashed_password = (await auth_services.hash_password(data.new_password)).decode()
 
-        await self.crud.update_one_nomit(
+        await self.account_crud.update_one_nomit(
             {"_id": user["_id"]},
             {
                 "$set": {"password": hashed_password},

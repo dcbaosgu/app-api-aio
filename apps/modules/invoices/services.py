@@ -13,8 +13,8 @@ from apps.modules.product.services import product_crud
 invoice_crud = BaseCRUD("invoices", engine_aio)
 
 class InvoiceServices:
-    def __init__(self, crud: BaseCRUD):
-        self.crud = crud
+    def __init__(self, invoice_crud: BaseCRUD):
+        self.invoice_crud = invoice_crud
         self.cart_service = CartService()
         self.rabbitmq_service = RabbitMQServices()
 
@@ -48,7 +48,7 @@ class InvoiceServices:
             "status": "pending",
             "created_at": Helper.get_timestamp()}
 
-        result = await self.crud.create(invoice_data)
+        result = await self.invoice_crud.create(invoice_data)
 
         # Send mail to RabbitMQ
         user = await user_crud.get_by_id(cart["user_id"])
@@ -67,15 +67,15 @@ class InvoiceServices:
         return result
 
     async def update(self, _id, data: dict):
-        result = await self.crud.update_by_id(_id, data)
+        result = await self.invoice_crud.update_by_id(_id, data)
         return result
 
     async def get(self, _id):
-        result = await self.crud.get_by_id(_id)
+        result = await self.invoice_crud.get_by_id(_id)
         return result
 
     async def delete(self, _id):
-        result = await self.crud.delete_by_id(_id)
+        result = await self.invoice_crud.delete_by_id(_id)
         return result
 
     async def search(self, query: dict, page: int, limit: int, start_time: str, end_time: str):
@@ -96,5 +96,5 @@ class InvoiceServices:
             query.setdefault("created_at", {})
             query["created_at"]["$lte"] = end_timestamp
 
-        result = await self.crud.search(query, page, limit)
+        result = await self.invoice_crud.search(query, page, limit)
         return result

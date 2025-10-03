@@ -6,10 +6,11 @@ from apps.mongo.engine import engine_logs, engine_aio
 from apps.utils.helper import Helper
 from apps.utils.validator import Validator
 
-
 logging_crud = BaseCRUD("loggings", engine_logs)
 
 class HomeService:
+    def __init__(self, logging_crud: BaseCRUD):
+        self.logging_crud = logging_crud
 
     async def export_bson(self) -> dict[str, list[dict]]:
         # Get all data from all collections in AIO
@@ -62,5 +63,5 @@ class HomeService:
             query.setdefault("created_at", {})
             query["created_at"]["$lte"] = end_timestamp
 
-        result = await logging_crud.search(query, page, limit)
+        result = await self.logging_crud.search(query, page, limit)
         return result

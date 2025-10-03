@@ -3,8 +3,7 @@ from .services import cron_crud, CronServices
 
 class CronController:
     def __init__(self):
-        self.crud = cron_crud
-        self.service = CronServices(self.crud)
+        self.service = CronServices(cron_crud)
 
     async def create(self, data):
         result = await self.service.create(data)

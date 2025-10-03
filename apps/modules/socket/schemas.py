@@ -24,3 +24,13 @@ class ChatChannels(BaseModel):
     last_message: Optional[LastMessenge] = None
     created_at: float
     updated_at: Optional[float] = None
+
+class ChannelCreate(BaseModel):
+    members: List[str]
+
+class ChannelResponse(BaseModel):
+    _id: str
+    members: List[str]
+    last_message: Optional[LastMessenge] = None
+    created_at: float
+    updated_at: Optional[float] = None
