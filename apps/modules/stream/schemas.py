@@ -7,6 +7,7 @@ class StreamCreate(BaseModel):
     genre: Literal["tutorial", "relax", "other"]
     tags: Optional[List[str]] = None
     path: str
+    ratio: Literal["vertical", "horizontal"] = "horizontal"
     desc: Optional[str] = None
     access_role: Literal["public", "private", "business"] = "public"
     allow_id: Optional[List[str]] = None
@@ -19,6 +20,7 @@ class StreamUpdate(BaseModel):
     genre: Optional[Literal["tutorial", "relax", "other"]] = None
     tags: Optional[List[str]] = None
     path: Optional[str] = None
+    ratio: Optional[str] = None
     desc: Optional[str] = None
     access_role: Optional[Literal["public", "private", "business"]] = None
     allow_id: Optional[List[str]] = None
@@ -30,15 +32,16 @@ class StreamResponse(BaseModel):
     id: str = Field(alias="_id")
     title: Optional[str]
     genre: Optional[str]
-    tags: Optional[List[str]] = Field(default_factory=list)
+    tags: Optional[List[str]] = None
     path: Optional[str]
-    desc: Optional[str]
+    ratio: Optional[str]
+    desc: Optional[str] = None
     access_role: Optional[str]
-    allow_id: Optional[List[str]] = Field(default_factory=list)
+    allow_id: Optional[List[str]] = None
     viewer: Optional[int]
     upload_by: Optional[str]
     created_at: Optional[float]
-    updated_at: Optional[float]
+    updated_at: Optional[float] = None
 
 
 class PaginatedStreamResponse(BaseModel):

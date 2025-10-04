@@ -1,7 +1,7 @@
 import os
 import subprocess
 
-base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 input_folder = os.path.join(base_dir, "assets/video")
 output_folder = os.path.join(base_dir, "assets/stream")
 
