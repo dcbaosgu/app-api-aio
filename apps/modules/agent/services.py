@@ -1,6 +1,7 @@
 from openai import OpenAI
 from anthropic import Anthropic
 from .config import *
+from .exception import ErrorCode
 
 
 openai_client = OpenAI(api_key=OPENAI_API_KEY)
@@ -13,16 +14,19 @@ class GeminiServices:
         self.client = client
 
     async def generate(self, content: str, model: str, prompt: None):
-        messages = []
-        if prompt:
-            messages.append({"role": "system", "content": prompt})
-        messages.append({"role": "user", "content": content})
+        try: 
+            messages = []
+            if prompt:
+                messages.append({"role": "system", "content": prompt})
+            messages.append({"role": "user", "content": content})
 
-        resp = self.client.chat.completions.create(
-            model=model,
-            messages=messages,
-        )
-        return resp.choices[0].message.content
+            resp = self.client.chat.completions.create(
+                model=model,
+                messages=messages,
+            )
+            return resp.choices[0].message.content
+        except Exception as e:
+            raise ErrorCode.GeminiError(str(e))
 
 
 class OpenAIServices:
@@ -30,16 +34,19 @@ class OpenAIServices:
         self.client = client
 
     async def generate(self, content: str, model: str, prompt: None):
-        messages = []
-        if prompt:
-            messages.append({"role": "system", "content": prompt})
-        messages.append({"role": "user", "content": content})
+        try:
+            messages = []
+            if prompt:
+                messages.append({"role": "system", "content": prompt})
+            messages.append({"role": "user", "content": content})
 
-        resp = self.client.chat.completions.create(
-            model=model,
-            messages=messages,
-        )
-        return resp.choices[0].message.content
+            resp = self.client.chat.completions.create(
+                model=model,
+                messages=messages,
+            )
+            return resp.choices[0].message.content
+        except Exception as e:
+            raise ErrorCode.OpenAIError(str(e))
     
 
 class ClaudeServices:
@@ -47,17 +54,20 @@ class ClaudeServices:
         self.client = client
 
     async def generate(self, content: str, model: str, prompt: None):
-        messages = []
-        if prompt:
-            messages.append({"role": "system", "content": prompt})
-        messages.append({"role": "user", "content": content})
+        try:
+            messages = []
+            if prompt:
+                messages.append({"role": "system", "content": prompt})
+            messages.append({"role": "user", "content": content})
 
-        resp = self.client.messages.create(
-            model=model,
-            max_tokens=1024,
-            messages=[{"role": m["role"], "content": m["content"]} for m in messages]
-        )
-        return resp.content[0].text
+            resp = self.client.messages.create(
+                model=model,
+                max_tokens=1024,
+                messages=[{"role": m["role"], "content": m["content"]} for m in messages]
+            )
+            return resp.content[0].text
+        except Exception as e:
+            raise ErrorCode.ClaudeError(str(e))
 
 
 gemini_services = GeminiServices(gemini_client)

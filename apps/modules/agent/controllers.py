@@ -1,5 +1,4 @@
 from .services import gemini_services, openai_services, claude_services
-from .exception import ErrorCode
 
 
 class GeminiController:
@@ -7,10 +6,8 @@ class GeminiController:
         self.service = gemini_services
 
     async def generate(self, content: str, model: str, prompt: None):
-        try:
-            return await self.service.generate(content, model, prompt)
-        except Exception as e:
-            raise ErrorCode.GeminiError(str(e))
+        result = await self.service.generate(content, model, prompt)
+        return result
 
 
 class OpenAIController:
@@ -18,10 +15,8 @@ class OpenAIController:
         self.service = openai_services
 
     async def generate(self, content: str, model: str, prompt: None):
-        try:
-            return await self.service.generate(content, model, prompt)
-        except Exception as e:
-            raise ErrorCode.OpenAIError(str(e))
+        result = await self.service.generate(content, model, prompt)
+        return result
 
 
 class ClaudeController:
@@ -29,7 +24,5 @@ class ClaudeController:
         self.service = claude_services
 
     async def generate(self, content: str, model: str, prompt: None):
-        try:
-            return await self.service.generate(content, model, prompt)
-        except Exception as e:
-            raise ErrorCode.ClaudeError(str(e))
+        result = await self.service.generate(content, model, prompt)
+        return result

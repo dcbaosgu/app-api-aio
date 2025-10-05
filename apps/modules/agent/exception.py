@@ -9,28 +9,28 @@ class StandardException(HTTPException):
 
 class ErrorCode:
     @staticmethod
-    def GeminiError(message: str = ""):
+    def GeminiError(exception: str):
         return StandardException(
-            type="ai/error/gemini-failed",
+            type="gemini/error/generate-fail",
             status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             title="Gemini Service Error",
-            detail=message or "An error occurred while calling Gemini."
+            detail=exception or "An error occurred while calling Gemini."
         )
 
     @staticmethod
-    def OpenAIError(message: str = ""):
+    def OpenAIError(exception: str):
         return StandardException(
-            type="ai/error/openai-failed",
+            type="openai/error/generate-fail",
             status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             title="OpenAI Service Error",
-            detail=message or "An error occurred while calling OpenAI."
+            detail=exception or "An error occurred while calling OpenAI."
         )
 
     @staticmethod
-    def ClaudeError(message: str = ""):
+    def ClaudeError(exception: str):
         return StandardException(
-            type="ai/error/claude-failed",
+            type="claude/error/generate-fail",
             status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             title="ClaudeAI Service Error",
-            detail=message or "An error occurred while calling CladeAI."
+            detail=exception or "An error occurred while calling CladeAI."
         )

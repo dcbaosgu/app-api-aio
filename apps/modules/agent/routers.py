@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from . import schemas
-from .controllers import GeminiController, OpenAIController, ClaudeController
+from .controllers import *
 
 router = APIRouter(prefix="/v1/ai", tags=["AI"])
 
@@ -24,8 +24,7 @@ async def generate_openai(data: schemas.OpenAIRequest):
 
 
 @router.post("/claude", status_code=200, responses={
-                200: {"model": schemas.Response, "description": "Generate via Claude"}
-})
+                200: {"model": schemas.Response, "description": "Generate via Claude"}})
 async def generate_claude(data: schemas.ClaudeRequest):
     result = await claude_controller.generate(data.content, data.model, data.prompt)
     return schemas.Response(generate=result)

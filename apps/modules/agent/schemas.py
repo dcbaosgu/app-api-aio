@@ -12,6 +12,7 @@ class OpenAIRequest(BaseModel):
     model: str = Field(default="gpt-4o-mini")
 
 class Response(BaseModel):
+    status: str = "success"
     generate: str
     
 class ClaudeRequest(BaseModel):
