@@ -9,6 +9,6 @@ class AppSheetController:
         result = await self.service.send_report(data)
         return result
 
-    async def get_report(self, page: int, limit: int):
-        result =  await self.service.get_report(page, limit)
+    async def fetch_report(self, page: int, limit: int):
+        result =  await self.service.fetch_report(page, limit)
         return result

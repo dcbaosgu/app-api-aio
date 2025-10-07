@@ -24,3 +24,13 @@ class StreamController:
     async def search(self, query: dict, page: int, limit: int):
         result = await self.service.search(query, page, limit)
         return result
+
+'''
+    async def play_list(self, stream_id: str):
+        result = await self.service.play_list(stream_id)
+        return result
+    
+    async def play_video(self, stream_id: str, resolution: str):
+        result = await self.service.play_video(stream_id, resolution)
+        return result
+'''

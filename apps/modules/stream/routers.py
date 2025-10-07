@@ -50,3 +50,20 @@ async def list_stream(
         ]
     result = await controller.search(query, page, limit)
     return result
+
+"""
+@router.get("/playlist/{stream_id}", status_code=200, responses={
+                200: {"model": schemas.PlayListResponse, "description": "Get items success"}
+})
+async def play_list(stream_id: str):
+    result = await controller.play_list(stream_id)
+    return schemas.PlayListResponse(**result)
+
+
+@router.get("/playvideo/{stream_id}", response_class=PlainTextResponse, responses={
+                200: {"description": "Play items success"}
+})
+async def play_video(stream_id: str, resolution: Optional[str] = Query("auto", description="auto| 360x640 | 480x854 | 720x1280 | 1080x1920")):
+    result = await controller.play_video(stream_id, resolution)
+    return PlainTextResponse(result, media_type="application/vnd.apple.mpegurl")
+"""

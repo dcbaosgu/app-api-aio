@@ -2,6 +2,7 @@ import requests
 import xmltodict
 from math import ceil
 from bs4 import BeautifulSoup
+from apps.utils.helper import Helper
 
 
 class RSSService:
@@ -17,12 +18,12 @@ class RSSService:
 
     async def parse_items(self, data):
         items = data["rss"]["channel"]["item"]
-        cleaned = []
+        result = []
 
         for item in items:
             title = item.get("title", "")
             link = item.get("link", "")
-            pub_date = item.get("pubDate", "")
+            date = item.get("pubDate", "")
             image = item.get("enclosure", {}).get("@url", "")
 
             # Clean data description
@@ -30,15 +31,15 @@ class RSSService:
             soup = BeautifulSoup(desc_raw, "html.parser")
             desc = next(soup.stripped_strings, "") # Get only text in string
 
-            cleaned.append({
+            result.append({
                 "title": title,
                 "link": link,
                 "image": image,
                 "description": desc,
-                "created_at": pub_date,
+                "created_at": Helper.date_to_timestamp(dt=date, fmt="%a, %d %b %Y %H:%M:%S %z"),
             })
 
-        return cleaned
+        return result
 
     async def get_paginated(self, page: int, limit: int, category: str, search: str = None):
         data = await self.fetch_rss(category)
@@ -52,10 +53,11 @@ class RSSService:
         total_pages = ceil(total / limit)
         start, end = (page - 1) * limit, page * limit
 
-        return {
+        result = {
             "total": total,
             "page": page,
             "limit": limit,
             "total_pages": total_pages,
             "results": all_items[start:end],
         }
+        return result

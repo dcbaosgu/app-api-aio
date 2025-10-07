@@ -16,7 +16,7 @@ class AppSheetService:
         except Exception as e:
             return {"status": "error", "message": str(e)}
         
-    async def get_report(self, page: int, limit: int) -> dict:
+    async def fetch_report(self, page: int, limit: int) -> dict:
         try:
             params = {"page": page, "limit": limit}
             response = requests.get(self.url, params=params, timeout=10)

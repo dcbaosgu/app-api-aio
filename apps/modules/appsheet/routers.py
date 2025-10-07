@@ -13,7 +13,8 @@ async def send_report(data: ReportRequest):
     result =  await controller.send_report(data.dict())
     return result
 
-@router.get("/get-report", status_code=200,
-            responses={200: {"description": "Get report success"}})
-async def get_report(page: int = 1, limit: int = 10):
-    return await controller.get_report(page, limit)
+@router.get("/fetch-report", status_code=200, responses={
+                200: {"description": "Fetch items success"}})
+async def fetch_report(page: int = 1, limit: int = 10):
+    result = await controller.fetch_report(page, limit)
+    return result
