@@ -2,7 +2,6 @@ import asyncio, sentry_sdk
 from worker.sentry.config import *
 from worker.rabbitmq.services import RabbitMQServices
 
-# Initialize Sentry
 sentry_sdk.init(dsn=DSN_SENTRY, environment=ENVIRONMENT, traces_sample_rate=1.0)
 
 async def main():
