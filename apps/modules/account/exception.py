@@ -17,12 +17,12 @@ class ErrorCode:
             detail="Incorrect email or password."
         )
     @staticmethod
-    def EmailNotFound():
+    def UserNotFound():
         return StandardException(
-            type="auth/error/email-not-found",
+            type="auth/error/user-not-found",
             status=status.HTTP_404_NOT_FOUND,
-            title="Email not Found",
-            detail="Email does not exist in user"
+            title="User not Found",
+            detail="Email or phone does not exist"
         )
     
     @staticmethod

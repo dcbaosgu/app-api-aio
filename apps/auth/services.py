@@ -17,8 +17,8 @@ class AuthServices():
         result = hashpw(password.encode("utf8"), gensalt())
         return result
 
-    def check_password(self, user_login_password, password):
-        if not checkpw(user_login_password.encode("utf-8"), password):
+    def check_password(self, login_password, password):
+        if not checkpw(login_password.encode("utf-8"), password):
             return False
         return True
 

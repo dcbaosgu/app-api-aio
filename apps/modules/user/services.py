@@ -11,9 +11,12 @@ class UserServices:
         self.user_crud = user_crud
 
     async def create(self, data: dict):
-        email = data.get("email")
-        if await Validator.is_email_exists(self.user_crud, email):
-            raise ErrorCode.EmailExisted(email)
+
+        if await Validator.is_field_exist(crud=self.user_crud, field="email", value=data.get("email")):
+            raise ErrorCode.AccountExisted(data.get("email"))
+        
+        if await Validator.is_field_exist(crud=self.user_crud, field="phone", value=data.get("phone")):
+            raise ErrorCode.AccountExisted(data.get("phone"))
         
         if data.get("password"):
             data["password"] = (await auth_services.hash_password(data["password"])).decode()
@@ -21,9 +24,12 @@ class UserServices:
         return await self.user_crud.create(data)
 
     async def update(self, _id: str, data: dict):
-        email = data.get("email")
-        if email and await Validator.is_email_exists(self.user_crud, email, exclude_id=_id):
-            raise ErrorCode.InvalidUserId
+        
+        if await Validator.is_field_exist(crud=self.user_crud, field="email", value=data.get("email")):
+            raise ErrorCode.AccountExisted(data.get("email"))
+        
+        if await Validator.is_field_exist(crud=self.user_crud, field="phone", value=data.get("phone")):
+            raise ErrorCode.AccountExisted(data.get("phone"))
         
         if data.get("password"):
             data["password"] = (await auth_services.hash_password(data["password"])).decode()

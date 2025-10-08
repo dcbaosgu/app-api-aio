@@ -9,12 +9,12 @@ class StandardException(HTTPException):
 
 class ErrorCode:
     @staticmethod
-    def EmailExisted(email: str = ""):
+    def AccountExisted(data: str = ""):
         return StandardException(
-            type="users/warning/email-existed",
+            type="users/warning/account-existed",
             status=status.HTTP_400_BAD_REQUEST,
-            title="Email already exists.",
-            detail=f"The email `{email}` is already used by another user."
+            title="Account already exists.",
+            detail=f"The account `{data}` is already used by another user."
         )
 
     @staticmethod

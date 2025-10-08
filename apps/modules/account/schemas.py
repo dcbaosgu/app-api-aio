@@ -2,7 +2,7 @@ from pydantic import BaseModel, EmailStr
 
 
 class LoginRequest(BaseModel):
-    email: EmailStr
+    account: str
     password: str
     remember_me: bool = False
 
@@ -15,13 +15,15 @@ class GetOTPRequest(BaseModel):
     email: EmailStr
 
 class GetOTPResponse(BaseModel):
+    status: str
     message: str
 
 
 class ForgotPasswordRequest(BaseModel):
-    email: EmailStr
+    account: str
     otp_code: str
     new_password: str
 
 class ForgotPasswordResponse(BaseModel):
+    status: str
     message: str

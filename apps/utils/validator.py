@@ -10,15 +10,15 @@ class Validator:
         return result
     
     @staticmethod
-    async def is_email_exists(crud, email: str, exclude_id: str = None) -> bool:
-        if not email: 
+    async def is_field_exist(crud, field: str, value: str, exclude_id: str = None) -> bool:
+        if not value:
             return False
-        query = {"email": email}
+        query = {field: value}
         if exclude_id:
             query["_id"] = {"$ne": ObjectId(exclude_id)}
-        existing = await crud.get_one_query(query=query)
-        return existing is not None
-
+        result = await crud.get_one_query(query=query) is not None
+        return result
+    
     @staticmethod
     def is_password_valid(password: str) -> bool:
         if not 8 <= len(password) <= 12:

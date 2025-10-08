@@ -14,10 +14,11 @@ class AccountService:
         self.rabbitmq_service = RabbitMQServices()
 
     async def login(self, data: LoginRequest):
-        email = data.email
-        user = await self.account_crud.get_one_query({"email": email})
-        if not user:
-            raise ErrorCode.InvalidLogin()
+        user = await self.account_crud.get_one_query({
+            "$or": [{"email": data.account}, {"phone": data.account}]
+        })
+
+        if not user: raise ErrorCode.InvalidLogin()
 
         if not auth_services.check_password(data.password, user["password"].encode()):
             raise ErrorCode.InvalidLogin()
@@ -25,6 +26,7 @@ class AccountService:
         token_data = {
             "uid": str(user.get("_id")),
             "email": user.get("email"),
+            "phone": user.get("phone"),
             "permission": user.get("permission"),
             "remember_me": data.remember_me
         }
@@ -34,8 +36,8 @@ class AccountService:
 
     async def get_otp(self, email: str):
         user = await self.account_crud.get_one_query({"email": email})
-        if not user: 
-            raise ErrorCode.EmailNotFound()
+
+        if not user: raise ErrorCode.UserNotFound()
 
         otp_code = Helper.generate_secret_otp()
         expire_otp = Helper.get_timestamp() + 15 * 60
@@ -43,12 +45,11 @@ class AccountService:
         await self.account_crud.update_by_id(_id=user["_id"], data={"otp_code": otp_code, "expire_otp": expire_otp})
 
         await self.rabbitmq_service.producer(
-            email=user["email"],
-            fullname=user["fullname"],
-            data={"otp_code": otp_code},
-            mail_type="reset_password"
-        )
-        return {"message": f"OTP sent to {email} & valid for 15 minutes"}
+            email=user.get("email"), fullname=user.get("fullname"),
+            data={"otp_code": otp_code}, mail_type="reset_password")
+
+        result = {"status":"success", "message": f"OTP sent: {email} & valid for 15 min"}
+        return result
     
     async def clean_otp(self):
         now = Helper.get_timestamp()
@@ -59,9 +60,10 @@ class AccountService:
         return result
     
     async def forgot_password(self, data: ForgotPasswordRequest):
-        user = await self.account_crud.get_one_query({"email": data.email})
-        if not user:
-            raise ErrorCode.EmailNotFound()
+        user = await self.account_crud.get_one_query({
+            "$or": [{"email": data.account}, {"phone": data.account}]
+        })
+        if not user: raise ErrorCode.UserNotFound()
         
         if "otp_code" not in user or "expire_otp" not in user:
             raise ErrorCode.OTPNotFound()
@@ -80,4 +82,5 @@ class AccountService:
                 "$set": {"password": hashed_password},
                 "$unset": {"otp_code": "", "expire_otp": ""}
             })
-        return {"message": "Password has been reset successfully"}
+        result = {"status": "success", "message": "Password has been reset"}
+        return result
