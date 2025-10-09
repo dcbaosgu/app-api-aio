@@ -15,6 +15,7 @@ from apps.modules.cronjob.routers import router as cron_router
 from apps.modules.redis.routers import router as redis_router
 from apps.modules.stream.routers import router as stream_router
 from apps.modules.news.routers import router as news_router
+from apps.modules.apikey.routers import router as api_router
 from worker.sentry.routers import router as sentry_router
 
 api_routing = APIRouter()
@@ -34,4 +35,5 @@ api_routing.include_router(cron_router)
 api_routing.include_router(redis_router)
 api_routing.include_router(stream_router)
 api_routing.include_router(news_router)
+api_routing.include_router(api_router)
 api_routing.include_router(sentry_router)
