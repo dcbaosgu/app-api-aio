@@ -82,8 +82,9 @@ class Helper:
     def generate_ticket_code() -> str:
         # Generate ticket code of first 5 letters + 12 random numbers, for example LYPJR714855620195
         prefix = ''.join(random.choices(string.ascii_uppercase, k=5))
-        number = ''.join(random.choices(string.digits, k=12))
-        return f"{prefix}{number}"
+        number = ''.join(random.choices(string.digits, k=2))
+        timestamp = str(int(Helper.get_timestamp()))
+        return f"{prefix}{number}{timestamp}"
     
     @staticmethod
     async def decode_access_token(token: str) -> dict:
