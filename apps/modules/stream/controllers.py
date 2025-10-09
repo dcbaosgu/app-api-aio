@@ -25,12 +25,10 @@ class StreamController:
         result = await self.service.search(query, page, limit)
         return result
 
-'''
     async def play_list(self, stream_id: str):
         result = await self.service.play_list(stream_id)
         return result
     
-    async def play_video(self, stream_id: str, resolution: str):
-        result = await self.service.play_video(stream_id, resolution)
+    async def play_master(self, stream_id: str, resolution: str):
+        result = await self.service.play_master(stream_id, resolution)
         return result
-'''

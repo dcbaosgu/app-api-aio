@@ -1,14 +1,14 @@
 from art import tprint
 from core.config import create_app
 from core.openapi import custom_openapi
-from routers import api_router
+from core.routing import api_routing
 from worker.kafka.services import kafka_service
 from apps.modules.cronjob.services import scheduler, crons_job
 
 
 app = create_app()
 app.openapi = lambda: custom_openapi(app)
-app.include_router(api_router)
+app.include_router(api_routing)
 
 tprint("APP-API-AIO", font="slant")
 

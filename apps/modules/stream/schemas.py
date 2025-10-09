@@ -50,3 +50,15 @@ class PaginatedStreamResponse(BaseModel):
     limit: int
     total_pages: int
     results: List[StreamResponse]
+
+
+class ResolutionItem(BaseModel):
+    bandwidth: int
+    resolution: str
+    path: str
+
+
+class PlayListResponse(BaseModel):
+    stream_id: str
+    ratio: str
+    resolutions: List[ResolutionItem]

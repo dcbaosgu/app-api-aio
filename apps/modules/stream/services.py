@@ -1,3 +1,4 @@
+from pathlib import Path
 from apps.mongo.base import BaseCRUD
 from apps.mongo.engine import engine_aio
 from .exception import ErrorCode
@@ -34,7 +35,7 @@ class StreamServices:
         result = await self.stream_crud.search(query, page, limit)
         return result
 
-"""
+
     async def play_list(self, stream_id: str):
         stream = await self.stream_crud.get_by_id(stream_id)
         if not stream:
@@ -68,7 +69,8 @@ class StreamServices:
         
         return result
     
-    async def play_video(self, stream_id: str, resolution: str = "auto"):
+    
+    async def play_master(self, stream_id: str, resolution: str = "auto"):
         stream = await self.stream_crud.get_by_id(stream_id)
         if not stream:
             raise ErrorCode.InvalidStreamId()
@@ -96,4 +98,3 @@ class StreamServices:
 
         return "".join(output_lines)
 
-"""
