@@ -11,17 +11,17 @@ class LoginResponse(BaseModel):
     token_type: str = "bearer"
 
 
-class GetOTPRequest(BaseModel):
+class ResetOTPRequest(BaseModel):
     email: EmailStr
 
-class GetOTPResponse(BaseModel):
+class ResetOTPResponse(BaseModel):
     status: str
     message: str
 
 
 class ForgotPasswordRequest(BaseModel):
     account: str
-    otp_code: str
+    reset_otp: str
     new_password: str
 
 class ForgotPasswordResponse(BaseModel):

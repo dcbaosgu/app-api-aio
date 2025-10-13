@@ -94,9 +94,9 @@ class Helper:
     def generate_secret_otp(length: int = 6) -> str:
         chars = string.ascii_uppercase + string.digits
         while True:
-            otp_code = ''.join(secrets.choice(chars) for _ in range(length))
-            if sum(c.isalpha() for c in otp_code) >= 2 and sum(c.isdigit() for c in otp_code) >= 2:
-                return otp_code
+            result = ''.join(secrets.choice(chars) for _ in range(length))
+            if sum(c.isalpha() for c in result) >= 2 and sum(c.isdigit() for c in result) >= 2:
+                return result
             
     @staticmethod
     def generate_secret_key(length: int = 64) -> str:

@@ -52,6 +52,7 @@ class InvoiceService:
 
         # Send mail to RabbitMQ
         user = await user_crud.get_by_id(cart["user_id"])
+        
         email_data = InvoiceEmail(
             items=[ItemEmail(**item) for item in cart["items"]],
             address=cart.get("address"),
@@ -59,7 +60,9 @@ class InvoiceService:
             total_items=cart.get("total_items"),
             total_price=cart.get("total_price")
         )
-        await self.rabbitmq_service.producer(email=user.get("email"), fullname=user.get("fullname"), data=email_data.model_dump(), mail_type="bill_info")
+        await self.rabbitmq_service.producer(
+            email=user.get("email"), fullname=user.get("fullname"), 
+            data=email_data.model_dump(), mail_type="issue_invoice")
 
         await self.cart_service.redis.delete(Helper._key(user_id))
         await invoice_bot.send_telegram(invoice_data)    

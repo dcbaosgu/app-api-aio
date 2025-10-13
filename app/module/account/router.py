@@ -20,10 +20,10 @@ async def login(data: schema.LoginRequest):
     result = await controller.login(data)
     return result
 
-@router.post("/get-otp", status_code=201, responses={
-                201: {"model": schema.GetOTPResponse, "description": "Post items success"}})
-async def get_otp(data: schema.GetOTPRequest):
-    result = await controller.get_otp(data)
+@router.post("/reset-otp", status_code=201, responses={
+                201: {"model": schema.ResetOTPResponse, "description": "Post items success"}})
+async def reset_otp(data: schema.ResetOTPRequest):
+    result = await controller.reset_otp(data)
     return result
 
 @router.post("/clean-otp", status_code=201, responses={

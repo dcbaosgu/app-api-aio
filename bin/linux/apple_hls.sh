@@ -2,8 +2,8 @@
 
 base_dir=$(pwd)
 
-input_folder="$base_dir/assets/video"
-output_folder="$base_dir/assets/stream"
+input_folder="$base_dir/asset/video"
+output_folder="$base_dir/asset/stream"
 
 mkdir -p "$output_folder"
 

@@ -17,6 +17,7 @@ from app.module.stream.router import router as stream_router
 from app.module.news.router import router as news_router
 from app.module.apikey.router import router as api_router
 from worker.sentry.router import router as sentry_router
+from app.partner.sepay.router import router as sepay_router
 
 api_routing = APIRouter()
 
@@ -37,3 +38,4 @@ api_routing.include_router(stream_router)
 api_routing.include_router(news_router)
 api_routing.include_router(api_router)
 api_routing.include_router(sentry_router)
+api_routing.include_router(sepay_router)

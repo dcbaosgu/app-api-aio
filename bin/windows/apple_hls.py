@@ -2,8 +2,8 @@ import os
 import subprocess
 
 base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
-input_folder = os.path.join(base_dir, "assets/video")
-output_folder = os.path.join(base_dir, "assets/stream")
+input_folder = os.path.join(base_dir, "asset/video")
+output_folder = os.path.join(base_dir, "asset/stream")
 
 os.makedirs(output_folder, exist_ok=True)
 

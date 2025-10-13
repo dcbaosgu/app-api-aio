@@ -31,7 +31,7 @@ class EmailService:
     async def send_otp(self, email: str, fullname: str, data: str):
         try:
             template = self.env.get_template("email_otp.html")
-            html_content = template.render(fullname=fullname, otp_code=data)
+            html_content = template.render(fullname=fullname, otp=data)
 
             message = MIMEMultipart("alternative")
             message["From"] = USERNAME_SMTP

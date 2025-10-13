@@ -1,4 +1,5 @@
 import json, aio_pika
+from typing import Union
 from .config import RABBITMQ_URL, RABBITMQ_QUEUE
 from .exception import ErrorCode
 from worker.email.service import email_service
@@ -24,13 +25,12 @@ class RabbitMQService:
         except Exception as e:
             raise ErrorCode.RabbitConnect()
 
-    async def producer(self, email: str, fullname: str, data: dict, mail_type: str):
+    async def producer(self, email: str, fullname: str, data: Union[dict, str], mail_type: str):
         
         payload = {"email": email, "fullname": fullname, "data": data, "mail_type": mail_type}
         
         try:
             await self.connect()
-            
             body = json.dumps(payload).encode()
             
             await self.channel.default_exchange.publish(aio_pika.Message(body=body), routing_key=self.queue_name)
@@ -49,14 +49,18 @@ class RabbitMQService:
                 async with message.process():
                     try:
                         payload = json.loads(message.body)
-                        data = payload.get("data", {})  
-                        print(f"[Consumer] Payload data details", payload)
 
                         if payload.get("mail_type") == "reset_password":
-                            await self.email_service.send_otp(email=payload.get("email"), fullname=payload.get("fullname"), data=data["otp_code"])
+                            await self.email_service.send_otp(
+                                email=payload.get("email"), 
+                                fullname=payload.get("fullname"), 
+                                data=payload.get("data", {}) )
 
-                        elif payload.get("mail_type") == "bill_info":
-                            await self.email_service.send_invoice(email=payload.get("email"), fullname=payload.get("fullname"), data=data)
+                        elif payload.get("mail_type") == "issue_invoice":
+                            await self.email_service.send_invoice(
+                                email=payload.get("email"), 
+                                fullname=payload.get("fullname"), 
+                                data=payload.get("data", {}) )
                         
                         else: raise ErrorCode.InvalidEmailData()
 

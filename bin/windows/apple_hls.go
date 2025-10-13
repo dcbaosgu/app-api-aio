@@ -8,8 +8,8 @@ func main() {
 		log.Fatalf("Failed to get current directory: %v", err)
 	}
 
-	inputFolder := filepath.Join(baseDir, "assets", "video")
-	outputFolder := filepath.Join(baseDir, "assets", "stream")
+	inputFolder := filepath.Join(baseDir, "asset", "video")
+	outputFolder := filepath.Join(baseDir, "asset", "stream")
 
 	// Create the original output directory if it does not exist
 	if err := os.MkdirAll(outputFolder, 0755); err != nil {

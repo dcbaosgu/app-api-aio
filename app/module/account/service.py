@@ -1,22 +1,18 @@
-from app.mongo.base import BaseCRUD
-from app.mongo.engine import engine_aio
 from app.auth.service import auth_service
+from app.module.user.service import user_crud
 from worker.rabbitmq.service import rabbitmq_service
 from .schema import LoginRequest, ForgotPasswordRequest
 from app.utils.helper import Helper
 from .exception import ErrorCode
 
-
-account_crud = BaseCRUD("user", engine_aio)
-
 class AccountService:
-    def __init__(self, account_crud: BaseCRUD):
-        self.account_crud = account_crud
+    def __init__(self):
+        self.user_crud = user_crud
         self.auth_service = auth_service
         self.rabbitmq_service = rabbitmq_service
 
     async def login(self, data: LoginRequest):
-        user = await self.account_crud.get_one_query({
+        user = await self.user_crud.get_one_query({
             "$or": [{"email": data.account}, {"phone": data.account}]
         })
 
@@ -36,56 +32,56 @@ class AccountService:
 
         return {"token_type": "bearer", "access_token": token}
 
-    async def get_otp(self, email: str):
-        user = await self.account_crud.get_one_query({"email": email})
+    async def reset_otp(self, data: str):
+        user = await self.user_crud.get_one_query({"email": data.email})
 
         if not user: raise ErrorCode.UserNotFound()
 
-        otp_code = Helper.generate_secret_otp()
-        expire_otp = Helper.get_timestamp() + 15 * 60
+        reset_otp = Helper.generate_secret_otp()
+        reset_exp = Helper.get_timestamp() + 15 * 60
 
-        await self.account_crud.update_by_id(_id=user["_id"], data={"otp_code": otp_code, "expire_otp": expire_otp})
+        await self.user_crud.update_by_id(_id=user["_id"], data={"reset_otp": reset_otp, "reset_exp": reset_exp})
 
         await self.rabbitmq_service.producer(
             email=user.get("email"), fullname=user.get("fullname"),
-            data={"otp_code": otp_code}, mail_type="reset_password")
+            data=reset_otp, mail_type="reset_password")
 
-        result = {"status":"success", "message": f"OTP sent: {email} & valid for 15 min"}
+        result = {"status":"success", "message": f"OTP sent: {data.email} & valid for 15 min"}
         return result
     
     async def clean_otp(self):
         now = Helper.get_timestamp()
-        query = {"expire_otp": {"$lt": now}} # otp has expired
-        data = {"$unset": {"expire_otp": "", "otp_code": ""}}
+        query = {"reset_exp": {"$lt": now}} # OTP has expired
+        data = {"$unset": {"reset_exp": "", "reset_otp": ""}}
         
-        result = await self.account_crud.update_many_nomit(query, data)
+        result = await self.user_crud.update_many_nomit(query, data)
         return result
     
     async def forgot_password(self, data: ForgotPasswordRequest):
-        user = await self.account_crud.get_one_query({
+        user = await self.user_crud.get_one_query({
             "$or": [{"email": data.account}, {"phone": data.account}]
         })
         if not user: raise ErrorCode.UserNotFound()
         
-        if "otp_code" not in user or "expire_otp" not in user:
+        if "reset_otp" not in user or "reset_exp" not in user:
             raise ErrorCode.OTPNotFound()
         
-        if user["otp_code"] != data.otp_code:
+        if user["reset_otp"] != data.reset_otp:
             raise ErrorCode.InvalidOTP()
         
-        if Helper.get_timestamp() > user["expire_otp"]:
+        if Helper.get_timestamp() > user["reset_exp"]:
             raise ErrorCode.ExpiredOTP()
         
         hashed_password = (await self.auth_service.hash_password(data.new_password)).decode()
 
-        await self.account_crud.update_one_nomit(
+        await self.user_crud.update_one_nomit(
             {"_id": user["_id"]},
             {
                 "$set": {"password": hashed_password},
-                "$unset": {"otp_code": "", "expire_otp": ""}
+                "$unset": {"reset_otp": "", "reset_exp": ""}
             })
         result = {"status": "success", "message": "Password has been reset"}
         return result
     
 
-account_service = AccountService(account_crud)
+account_service = AccountService()
