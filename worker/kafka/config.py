@@ -1,6 +1,6 @@
 from pydantic_settings import BaseSettings
 
-class Settings(BaseSettings):
+class Setting(BaseSettings):
     KAFKA_BOOTSTRAP_SERVERS: str
     KAFKA_CHAT_TOPIC: str
     KAFKA_CHAT_GROUP: str
@@ -9,8 +9,8 @@ class Settings(BaseSettings):
         env_file = "env/worker.env"
         extra = "ignore"
 
-settings = Settings()
+setting = Setting()
 
-KAFKA_BOOTSTRAP_SERVERS = settings.KAFKA_BOOTSTRAP_SERVERS
-KAFKA_CHAT_TOPIC = settings.KAFKA_CHAT_TOPIC
-KAFKA_CHAT_GROUP = settings.KAFKA_CHAT_GROUP
+KAFKA_BOOTSTRAP_SERVERS = setting.KAFKA_BOOTSTRAP_SERVERS
+KAFKA_CHAT_TOPIC = setting.KAFKA_CHAT_TOPIC
+KAFKA_CHAT_GROUP = setting.KAFKA_CHAT_GROUP

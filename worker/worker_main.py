@@ -1,12 +1,12 @@
 import asyncio, sentry_sdk
 from worker.sentry.config import *
-from worker.rabbitmq.services import RabbitMQServices
+from worker.rabbitmq.service import rabbitmq_service
 
 sentry_sdk.init(dsn=DSN_SENTRY, environment=ENVIRONMENT, traces_sample_rate=1.0)
 
 async def main():
-    rabbit = RabbitMQServices()
-    asyncio.create_task(rabbit.consumer())
+    
+    asyncio.create_task(rabbitmq_service.consumer())
 
     print("\n[*] Worker is launching...")
 

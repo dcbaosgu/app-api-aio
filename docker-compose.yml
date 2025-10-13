@@ -3,18 +3,18 @@ services:
     build: .
     image: app-api-aio/api
     restart: on-failure
-    command: uvicorn main:app --reload --host 0.0.0.0 --port 8000 --proxy-headers       # Development
-    # command: uvicorn main:app --workers 2 --host 0.0.0.0 --port 8000 --proxy-headers  # Production
+    command: uvicorn main:app --reload --host 0.0.0.0 --port 8000 --proxy-headers      # Development
+    # command: uvicorn main:app --workers 2 --host 0.0.0.0 --port 8000 --proxy-headers # Production
     volumes:
-      - ./:/opt/python-projects/apps/
+      - ./:/opt/python-project/app/
     ports:
-      - "127.0.0.1:8000:8000"
+      - "8000:8000"
     env_file:
       - ./env/app.env
     healthcheck:
-      test: ["CMD", "sh", "-c", "curl -s -f $${URL_DOMAIN}/v1/home/ping || exit 1"]
-      interval: 60s
-      timeout: 3s
+      test: ["CMD-SHELL", "curl -s -f http://api:8000/v1/home/ping || exit 1"]
+      interval: 30s
+      timeout: 5s
       retries: 3
     depends_on:
       rabbitmq:
@@ -25,18 +25,18 @@ services:
         condition: service_healthy
       mgdb:
         condition: service_healthy
-      # pgdb:
-      #  condition: service_healthy
+      pgdb:
+        condition: service_healthy
 
   worker:
     build: .
     image: app-api-aio/worker
-    restart: always
-    command: python3 /opt/python-projects/apps/worker/worker_main.py
+    restart: on-failure
+    command: python3 /opt/python-project/app/worker/worker_main.py
     environment:
-    - PYTHONPATH=/opt/python-projects/apps
+    - PYTHONPATH=/opt/python-project/app
     volumes:
-      - ./:/opt/python-projects/apps/
+      - ./:/opt/python-project/app/
     env_file:
       - ./env/worker.env
     depends_on:
@@ -46,30 +46,33 @@ services:
         condition: service_healthy
       mgdb:
         condition: service_healthy
-      # pgdb:
-      #  condition: service_healthy
+      pgdb:
+        condition: service_healthy
 
   nginx:
-    image: nginx:1.29.1-alpine
-    container_name: nginx
+    image: nginx:1.29.2-alpine
+    container_name: nginx-container
+    restart: unless-stopped
     depends_on:
       - api
     ports:
       - "80:80"
-      # - "443:443"  # Open when use HTTPS
+      - "443:443"  # When use HTTPS
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
       - ./nginx/snippets:/etc/nginx/snippets:ro
       - ./nginx/ssl:/etc/nginx/ssl:ro
-    restart: always
 
   rabbitmq:
-    image: rabbitmq:3.13.7-management-alpine
-    restart: on-failure
+    image: rabbitmq:4.1.4-management-alpine
+    container_name: rabbitmq-container
+    restart: unless-stopped
     ports:
       - "5672:5672"
       - "15672:15672"
+    volumes:
+    - rabbitmqdata:/var/lib/rabbitmq
     healthcheck:
       test: rabbitmq-diagnostics check_port_connectivity
       interval: 10s
@@ -77,75 +80,84 @@ services:
       retries: 3
 
   kafka:
-    image: bitnamilegacy/kafka:3.6.1
-    container_name: kafka
+    image: apache/kafka:4.1.0
+    container_name: kafka-container
     restart: unless-stopped
     ports:
-      - "9092:9092" 
+      - "9092:9092"
     env_file:
       - ./env/worker.env
     volumes:
-      - ./kafka_data:/bitnami/kafka
+      - kafkadata:/var/lib/kafka/data
     healthcheck:
-      test: ["CMD-SHELL", "kafka-topics.sh --bootstrap-server kafka:9092 --list || exit 1"]
-      interval: 20s
+      test: ["CMD-SHELL", "/opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server kafka:9092 > /dev/null 2>&1 || exit 1"]
+      interval: 30s
       timeout: 10s
-      retries: 5
-    mem_limit: 1G       # limit RAM
-    cpus: 0.5           # limit 50% in 1 core CPU
+      retries: 20
 
   redis:
-    image: redis:7.2-alpine
-    restart: on-failure
+    image: redis:8.2.2-alpine
+    container_name: redis-container
+    restart: unless-stopped
     env_file:
       - ./env/app.env
-    command: /bin/sh -c "redis-server --requirepass $$REDIS_PASSWORD --appendonly no --save 60 1"
+    command: /bin/sh -c "redis-server --requirepass $$REDIS_PASSWORD --appendonly no --save"
     ports:
       - "6379:6379"
     volumes:
-      - ./redis_data:/data
+      - redisdata:/data
     healthcheck:
       test: [ "CMD", "redis-cli", "-a", "$$REDIS_PASSWORD", "PING" ]
       interval: 10s
       timeout: 10s
       retries: 3
-
-  mgdb:
-    image: mongo:8.0.14
-    restart: on-failure
+  
+  pgdb:
+    image: postgres:18-alpine
+    container_name: postgre-container
+    restart: unless-stopped
+    env_file:
+      - ./env/app.env
     volumes:
-      - ./mongo_data:/data/db
-    command: --quiet
+      - postgredata:/var/lib/postgresql/data
     ports:
-      - "127.0.0.1:27018:27017"
+      - "5432:5432" 
     healthcheck:
-      test: echo 'db.runCommand({serverStatus:1}).ok' | mongosh admin --quiet | grep 1
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-postgres} -d $${POSTGRES_DB:-$${POSTGRES_USER:-postgres}}"]
       interval: 60s
       timeout: 60s
       retries: 6
 
-  # pgdb:
-    #  image: postgres:15-alpine
-    #  restart: on-failure
-    #  env_file:
-    #    - ./env/app.env
-    #  volumes:
-    #    - ./postgres_data:/var/lib/postgresql/data
-    #  ports:
-    #    - "127.0.0.1:5432:5432"
-    #  healthcheck:
-    #    test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-postgres} -d $${POSTGRES_DB:-$${POSTGRES_USER:-postgres}}"]
-    #    interval: 60s
-    #    timeout: 60s
-    #    retries: 6
-
-  # kafka-ui:
-    # image: provectuslabs/kafka-ui:v0.7.2
-    # container_name: kafka-ui
-    # ports:
-    #  - "8080:8080"
-    # environment:
-    #  - KAFKA_CLUSTERS_0_NAME=local
-    #  - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
-    # depends_on:
-    #  - kafka
+  mgdb:
+    image: mongo:8.0.15
+    container_name: mongo-container
+    restart: unless-stopped
+    volumes:
+      - mongodata:/data/db
+    command: --quiet
+    ports:
+      - "27018:27017"
+    healthcheck:
+      test: ["CMD-SHELL", "echo 'db.runCommand({serverStatus:1}).ok' | mongosh admin --quiet | grep 1"]
+      interval: 60s
+      timeout: 60s
+      retries: 6
+  
+  kafbat:
+    image: kafbat/kafka-ui:v1.3.0
+    container_name: kafbat-container
+    restart: on-failure
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./env/worker.env
+    depends_on:
+      kafka:
+        condition: service_healthy
+        
+volumes:
+  rabbitmqdata:
+  kafkadata:
+  redisdata:
+  postgredata:
+  mongodata:

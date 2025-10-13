@@ -1,5 +1,5 @@
-from fastapi.openapi.utils import get_openapi
 from fastapi import FastAPI
+from fastapi.openapi.utils import get_openapi
 
 
 def custom_openapi(app: FastAPI):
@@ -19,7 +19,7 @@ def custom_openapi(app: FastAPI):
         "email": "dcbao.dev@gmail.com",
     }
     
-    openapi_schema["info"]["termsOfService"] = "https://github.com/canon-d2"
+    openapi_schema["info"]["termsOfService"] = "https://github.com/Canon-D2/app-api-aio"
 
     openapi_schema["components"]["securitySchemes"] = {
         "BearerAuth": {
@@ -36,4 +36,5 @@ def custom_openapi(app: FastAPI):
                 openapi_schema["paths"][path][method]["security"] = [{"BearerAuth": []}]
 
     app.openapi_schema = openapi_schema
+    
     return app.openapi_schema

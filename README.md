@@ -54,7 +54,7 @@
   ```shell
     bun run dev
   ```
-5. Access host
+6. Access host
   ```shell
     http://localhost:3000/
   ```
@@ -69,6 +69,7 @@
   ```shell
     git clone https://github.com/Canon-D2/app-api-aio
   ```
+
 3. Building Applications on Docker
   - Add env file containing environment variables to project
 
@@ -84,6 +85,7 @@
     .\bin\windows\dump_db.ps1
     ./bin/linux/dump_db.sh
   ```
+
 5. Convert HTTP Live Streaming
   -Ensure video exists in mp4 and mov format
    ```shell
@@ -91,12 +93,12 @@
     swift apple_hls.swift
     ./bin/linux/apple_hls.sh
   ```
-
+  
 6. Run APP
   ```shell
     http://localhost:8000/docs/
     http://localhost:8000/redoc/
   ```
    
------------------------------------------------------------------------------------------------
+--------------------------------------------------------
 <p align="center"> Thanks for reading me ❤️ </p>

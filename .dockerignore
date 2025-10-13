@@ -1,2 +1,9 @@
 __pycache__
 .pytest_cache
+test
+.gitignore
+README.md
+asset/video
+tutorial-script.ini
+ubuntu-script.ini
+winarch-script.ini

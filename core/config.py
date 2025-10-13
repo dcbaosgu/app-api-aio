@@ -1,7 +1,7 @@
 import sentry_sdk
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from apps.middlewares.logging_middleware import LoggingMiddleware
+from app.middleware.logging_service import LoggingService
 from worker.sentry.config import DSN_SENTRY, ENVIRONMENT
 
 
@@ -12,7 +12,7 @@ def create_app() -> FastAPI:
         description="RestfulAPI backend with JWT authentication",
     )
 
-    app.add_middleware(LoggingMiddleware)
+    app.add_middleware(LoggingService)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=["*"],

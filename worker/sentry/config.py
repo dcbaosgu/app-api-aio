@@ -1,6 +1,6 @@
 from pydantic_settings import BaseSettings
 
-class Settings(BaseSettings):
+class Setting(BaseSettings):
     DSN_SENTRY: str
     ENVIRONMENT: str
 
@@ -8,7 +8,7 @@ class Settings(BaseSettings):
         env_file = "env/app.env"
         extra = "ignore"
 
-settings = Settings()
+setting = Setting()
 
-DSN_SENTRY = settings.DSN_SENTRY
-ENVIRONMENT = settings.ENVIRONMENT
+DSN_SENTRY = setting.DSN_SENTRY
+ENVIRONMENT = setting.ENVIRONMENT

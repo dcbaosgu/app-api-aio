@@ -2,9 +2,10 @@ __pycache__
 .pytest_cache
 env
 backup
-assets/video
-assets/stream
-redis_data
-kafka_data
-mongo_data
-postgres_data
+asset/video
+asset/stream
+redisdata
+kafkadata
+mongodata
+postgredata
+

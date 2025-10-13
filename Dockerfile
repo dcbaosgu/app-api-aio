@@ -1,31 +1,23 @@
-# Base image
 FROM python:3.13.7-alpine
 
-# Set work directory
-WORKDIR /opt/python-projects/apps
+WORKDIR /opt/python-project/app
 
-# Env settings no pycache
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
 
-# Install build dependencies
-RUN set -eux \
-    && apk add --no-cache --virtual .build-adeps build-base \
-    openssl-dev libffi-dev gcc musl-dev python3-dev librdkafka-dev \
-    && pip install --upgrade pip setuptools wheel \
-    && rm -rf /root/.cache/pip
+COPY ./requirements.txt .
 
-# Install ffmpeg (alpine package)
-RUN apk add --no-cache ffmpeg
+RUN set -eux; \
+    apk add --no-cache --virtual .build-deps \
+        build-base \
+        python3-dev \
+        librdkafka-dev \
+        libffi-dev \
+        openssl-dev; \
+    pip install --no-cache-dir --upgrade pip setuptools wheel; \
+    pip install --no-cache-dir -r requirements.txt; \
+    apk add --no-cache ffmpeg curl openssl; \
+    apk del .build-deps; \
+    rm -rf /root/.cache/pip
 
-# Copy requirements file
-COPY ./requirements.txt /opt/python-projects/apps/requirements.txt
-
-# Install Python dependencies
-RUN pip install -r /opt/python-projects/apps/requirements.txt
-
-# Install extra tools for healthcheck and SSL
-RUN apk add --no-cache curl openssl
-
-# Copy project files
-COPY . /opt/python-projects/apps/
+COPY . /opt/python-project/app
