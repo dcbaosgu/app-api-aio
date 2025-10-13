@@ -63,6 +63,11 @@ services:
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
       - ./nginx/snippets:/etc/nginx/snippets:ro
       - ./nginx/ssl:/etc/nginx/ssl:ro
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost/nginx-test"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
 
   rabbitmq:
     image: rabbitmq:4.1.4-management-alpine

@@ -4,6 +4,7 @@
 $backupPath = Join-Path $PSScriptRoot "backup"
 
 docker run --rm `
-  -v "$backupPath:/backup" `
-  mongo `
+  --pull=never `
+  -v "${backupPath}:/backup" `
+  mongo:8.0.15 `
   mongorestore --host host.docker.internal --port 27018 --db aio /backup
