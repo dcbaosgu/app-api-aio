@@ -44,8 +44,7 @@ class Validator:
     def is_apikey_valid(auth, key) -> bool:
         if not auth: 
             return False
-        # Ex: "Apikey 123abc" or "Bearer 123abc"
-        token = auth.split(" ", 1)[1].strip()
-        if not secrets.compare_digest(token, key):
-            return False
-        return True
+        # Ex: Bearer <api-key>/ x-api-key <api-key>
+        token = auth.split(" ", 1)[-1].strip()
+        result = secrets.compare_digest(token, key)
+        return result

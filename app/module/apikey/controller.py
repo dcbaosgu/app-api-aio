@@ -11,3 +11,7 @@ class APIKeyController:
     async def encode_api_key(self, token):
         result = await self.service.encode_api_key(token)
         return result
+    
+    async def verify_key(self, apikey, hashkey):
+        result = await self.service.verify_key(apikey, hashkey)
+        return result

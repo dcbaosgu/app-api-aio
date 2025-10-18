@@ -1,4 +1,5 @@
 from app.utils.helper import Helper
+from app.utils.validator import Validator
 
 
 class APIKeyService:
@@ -15,6 +16,12 @@ class APIKeyService:
     async def encode_api_key(self, token):
         encode_key = Helper.encode_hmac_key(token)
         result = {"status": "success", "encode_key": encode_key}
+        return result
+    
+    async def verify_key(self, apikey, hashkey):
+        auth_key = Helper.encode_hmac_key(apikey)
+        verify = Validator.is_apikey_valid(auth=auth_key,key=hashkey)
+        result = {"status": "success", "verify": bool(verify)}
         return result
 
 apikey_service = APIKeyService()

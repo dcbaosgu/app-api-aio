@@ -133,6 +133,9 @@ class Helper:
         return f"{prefix}-{token[:length]}"
     
     def encode_hmac_key(token):
+        # Ex: Bearer <api-key>/ x-api-key <api-key>
+        if " " in token:
+            token = token.split(" ", 1)[1].strip()
         signature = hmac.new(
             key=SECRET_KEY.encode(),
             msg=token.encode(),
