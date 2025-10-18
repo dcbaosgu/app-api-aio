@@ -7,7 +7,8 @@ from zoneinfo import ZoneInfo
 from datetime import datetime, timedelta
 from app.auth.config import SECRET_KEY, ALGORITHM
 from app.utils.validator import Validator
-import random, string, secrets, base64, qrcode, unicodedata, re
+import random, secrets, uuid, hmac, hashlib
+import string, base64, qrcode, unicodedata, re
 
 class Helper:
     
@@ -99,11 +100,6 @@ class Helper:
                 return result
             
     @staticmethod
-    def generate_secret_key(length: int = 64) -> str:
-        result = secrets.token_urlsafe(length)
-        return result
-            
-    @staticmethod
     def generate_qr_code(data: str, format: Literal["base64", "image"]):
         qr = qrcode.make(data)
         buf = BytesIO()
@@ -118,3 +114,28 @@ class Helper:
             # headers={"Content-Disposition": f"attachment; filename=qr_{data}.png"} # Download
         return result
         
+    def generate_key_v1(prefix: str = "sk", length: int = 64) -> str:
+        token = ''
+        while len(token) < length:
+            token += secrets.token_urlsafe(length)
+        return f"{prefix}-{token[:length]}"
+
+    def generate_key_v2(prefix: str = "sk", length: int = 64) -> str:
+        alphabet = string.ascii_uppercase + string.ascii_lowercase + string.digits
+        token = ''.join(secrets.choice(alphabet) for _ in range(length))
+        return f"{prefix}-{token}"
+
+    def generate_key_v3(prefix: str = "sk", length: int = 64) -> str:
+        token = ''
+        while len(token) < length:
+            key_bytes = uuid.uuid4().bytes
+            token += base64.urlsafe_b64encode(key_bytes).decode().rstrip("=")
+        return f"{prefix}-{token[:length]}"
+    
+    def encode_hmac_key(token):
+        signature = hmac.new(
+            key=SECRET_KEY.encode(),
+            msg=token.encode(),
+            digestmod=hashlib.sha256
+        ).hexdigest()
+        return signature

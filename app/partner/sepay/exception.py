@@ -16,3 +16,21 @@ class ErrorCode:
             title="Sepay Service Error",
             detail="An error occurred while calling Sepay."
         )
+    
+    @staticmethod
+    def SepayWebhookFailed():
+        return StandardException(
+            type="sepay/error/webhook-failed",
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            title="Sepay Webhook Error",
+            detail="An error occurred while processing the Sepay webhook data."
+        )
+    
+    @staticmethod
+    def SepayUnauthorized():
+        return StandardException(
+            type="sepay/error/unauthorized",
+            status=status.HTTP_403_FORBIDDEN,
+            title="Unauthorized Webhook",
+            detail="Invalid Sepay API key in webhook request."
+        )

@@ -1,4 +1,4 @@
-import re
+import re, secrets
 from bson import ObjectId
 from datetime import datetime
 
@@ -39,3 +39,13 @@ class Validator:
             return True
         except ValueError:
             return False
+
+    @staticmethod
+    def is_apikey_valid(auth, key) -> bool:
+        if not auth: 
+            return False
+        # Ex: "Apikey 123abc" or "Bearer 123abc"
+        token = auth.split(" ", 1)[1].strip()
+        if not secrets.compare_digest(token, key):
+            return False
+        return True

@@ -1,18 +1,15 @@
 from pydantic import BaseModel
 from typing import List
 
+class APIKeyRequest(BaseModel):
+    prefix: str = "sk"
+    length: int = 64
+
 class APIKeyResponse(BaseModel):
-    subject: str
-    keyname: str
-    apikey: str
+    key_v1: str
+    key_v2: str
+    key_v3: str
 
-class APIKeyVerify(BaseModel):
-    status: str
-    verify: bool
-
-class PaginatedAPIKeyResponse(BaseModel):
-    total: int
-    page: int
-    limit: int
-    total_pages: int
-    results: List[APIKeyResponse]
+class EncodeResponse(BaseModel):
+    status : str
+    encode_key: str
