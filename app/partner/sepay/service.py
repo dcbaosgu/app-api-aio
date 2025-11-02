@@ -16,7 +16,7 @@ class SepayService:
         self.base_url = "https://qr.sepay.vn/img"
         self.sepay_crud = sepay_crud
 
-    def generate_qrpay(self, data):
+    def sepay_qrcode(self, data):
         param = f"acc={VIRTUAL_ACCOUNT}&bank={BANK_NAME}"
 
         if data.get("amount"):
@@ -35,6 +35,15 @@ class SepayService:
             result.raw, media_type=result.headers.get("content-type", "image/png"),
             headers={"Content-Disposition": 'inline; filename=\"qr.png\"'} # inline -> attachment (download)
         )
+    
+    def sepay_infopay(self, data):
+        result = {
+            "virtual_account": VIRTUAL_ACCOUNT,
+            "bank_name": BANK_NAME,
+            "amount": data.get("amount"),
+            "description": data.get("des")
+        }
+        return result
 
     async def sepay_webhook(self, request, data):
 

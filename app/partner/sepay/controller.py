@@ -4,8 +4,11 @@ class SepayController:
     def __init__(self):
         self.service = sepay_service
 
-    def generate_qrpay(self, data):
-        result = self.service.generate_qrpay(data)
+    def sepay_payment(self, data, category):
+        if category == "qr-code":
+            result = self.service.sepay_qrcode(data)
+        if category == "info-pay":
+            result = self.service.sepay_infopay(data)
         return result
     
     async def sepay_webhook(self, request, data):

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, Query
 from . import schema
 from .controller import SepayController
 
@@ -8,8 +8,8 @@ controller = SepayController()
 
 @router.post("/payment", status_code=200, responses={
                 200: {"model": schema.GenerateQRPay, "description": "Create items success"}})
-def generate_qrpay(data: schema.GenerateQRPay):
-    result = controller.generate_qrpay(data.model_dump())
+def sepay_payment(data: schema.GenerateQRPay, category: str = Query(..., enum=["qr-code", "info-pay"])):
+    result = controller.sepay_payment(data.model_dump(), category)
     return result
 
 @router.post("/webhook", status_code=200, responses={
